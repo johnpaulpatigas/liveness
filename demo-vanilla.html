@@ -1,0 +1,153 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Liveness SDK - Vanilla JS Demo</title>
+        <style>
+            body {
+                font-family: sans-serif;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                background: #f0f2f5;
+            }
+            .container {
+                position: relative;
+                width: 640px;
+                height: 480px;
+                background: #000;
+                margin-top: 20px;
+                border-radius: 12px;
+                overflow: hidden;
+            }
+            video {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+                transform: scaleX(-1);
+            }
+            canvas {
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+            }
+            #status {
+                margin-top: 20px;
+                font-size: 1.2rem;
+                font-weight: bold;
+                padding: 10px 20px;
+                background: white;
+                border-radius: 8px;
+                box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            }
+            button {
+                margin-top: 20px;
+                padding: 10px 20px;
+                font-size: 1rem;
+                cursor: pointer;
+                background: #007bff;
+                color: white;
+                border: none;
+                border-radius: 5px;
+            }
+            button:disabled {
+                background: #ccc;
+                cursor: not-allowed;
+            }
+            #logs {
+                margin-top: 20px;
+                width: 640px;
+                height: 150px;
+                overflow-y: scroll;
+                background: white;
+                border: 1px solid #ccc;
+                padding: 10px;
+                font-family: monospace;
+                font-size: 0.9rem;
+            }
+        </style>
+    </head>
+    <body>
+        <h1>Liveness SDK (No Framework)</h1>
+
+        <div class="container">
+            <video id="videoElement" playsinline muted autoplay></video>
+            <canvas id="canvasElement"></canvas>
+        </div>
+
+        <div id="status">Initializing...</div>
+        <button id="startBtn" disabled>Start Liveness Check</button>
+
+        <div id="logs"></div>
+
+        <script type="module">
+            import { LivenessSDK } from "./src/sdk/LivenessSDK.js";
+
+            const videoEl = document.getElementById("videoElement");
+            const canvasEl = document.getElementById("canvasElement");
+            const statusEl = document.getElementById("status");
+            const startBtn = document.getElementById("startBtn");
+            const logsEl = document.getElementById("logs");
+
+            function log(msg) {
+                const div = document.createElement("div");
+                div.textContent = `[${new Date().toLocaleTimeString()}] ${msg}`;
+                logsEl.prepend(div);
+            }
+
+            const sdk = new LivenessSDK({
+                headTurnThreshold: 0.4,
+                challengeTimeout: 10000,
+            });
+
+            sdk.on("ready", () => {
+                log("SDK Ready");
+                statusEl.textContent = "Models Loaded. Ready.";
+                startBtn.disabled = false;
+            });
+
+            sdk.on("challenge", ({ type, instruction }) => {
+                log(`Challenge: ${type}`);
+                statusEl.textContent = instruction;
+                statusEl.style.color = "#007bff";
+            });
+
+            sdk.on("success", ({ descriptor }) => {
+                log("Success!");
+                statusEl.textContent = "Verification Successful!";
+                statusEl.style.color = "green";
+                log(
+                    `Vector: ${descriptor.slice(0, 5).map((n) => n.toFixed(3))}...`,
+                );
+            });
+
+            sdk.on("failure", (error) => {
+                log(`Failed: ${error.code}`);
+                statusEl.textContent = `❌ Failed: ${error.message}`;
+                statusEl.style.color = "red";
+                startBtn.disabled = false;
+                startBtn.textContent = "Retry";
+            });
+
+            log("Loading models...");
+            sdk.load().catch((err) => {
+                log(`Load Error: ${err.message}`);
+                statusEl.textContent = "Error loading models";
+            });
+
+            startBtn.addEventListener("click", async () => {
+                startBtn.disabled = true;
+                statusEl.textContent = "Starting Camera...";
+                try {
+                    await sdk.start(videoEl, canvasEl);
+                } catch (err) {
+                    log(`Start Error: ${err.message}`);
+                    startBtn.disabled = false;
+                }
+            });
+        </script>
+    </body>
+</html>
