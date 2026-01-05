@@ -26,6 +26,7 @@ export class LivenessEngine {
   #isChallengeProcessing = false;
   #hasDetectedOpenEyes = false;
   #lastFrameTime = 0;
+  #lastLandmarks = null;
 
   constructor(callbacks, config = {}) {
     if (
@@ -166,6 +167,7 @@ export class LivenessEngine {
       return;
     }
     const landmarks = faces[0];
+    this.#lastLandmarks = landmarks;
     this.#processChallenge(landmarks);
   };
 
@@ -262,7 +264,7 @@ export class LivenessEngine {
     this.#callbacks.onChallengeChanged("PROCESSING");
     try {
       const inputSize = this.#recognitionModel.inputs[0].shape.slice(1, 3);
-      const faceTensor = this.#getFaceTensor(inputSize);
+      const faceTensor = this.#getFaceTensor(inputSize, this.#lastLandmarks);
       const predictionTensor = this.#recognitionModel.predict(faceTensor);
       const normalizedTensor = tf.tidy(() => {
         const norm = predictionTensor.norm();
@@ -283,16 +285,49 @@ export class LivenessEngine {
     }
   }
 
-  #getFaceTensor(inputSize) {
+  #getFaceTensor(inputSize, landmarks) {
     return tf.tidy(() => {
-      const tensor = tf.browser.fromPixels(this.#videoElement);
-      const [height, width] = inputSize;
-      const resized = tf.image.resizeBilinear(tensor, [height, width]);
-      const normalized = resized
-        .toFloat()
-        .div(tf.scalar(127.5))
-        .sub(tf.scalar(1.0));
-      return normalized.expandDims(0);
+      const image = tf.browser.fromPixels(this.#videoElement);
+      const [targetH, targetW] = inputSize;
+
+      if (!landmarks) {
+        return tf.image
+          .resizeBilinear(image, [targetH, targetW])
+          .toFloat()
+          .div(tf.scalar(127.5))
+          .sub(tf.scalar(1.0))
+          .expandDims(0);
+      }
+
+      const xs = landmarks.map((l) => l.x);
+      const ys = landmarks.map((l) => l.y);
+      const xMin = Math.min(...xs);
+      const xMax = Math.max(...xs);
+      const yMin = Math.min(...ys);
+      const yMax = Math.max(...ys);
+
+      const w = xMax - xMin;
+      const h = yMax - yMin;
+      const padX = w * 0.2;
+      const padY = h * 0.2;
+
+      const y1 = Math.max(0, yMin - padY);
+      const x1 = Math.max(0, xMin - padX);
+      const y2 = Math.min(1, yMax + padY);
+      const x2 = Math.min(1, xMax + padX);
+
+      const box = [[y1, x1, y2, x2]];
+      const boxInd = [0];
+
+      const batchImage = image.expandDims(0).toFloat();
+      const cropped = tf.image.cropAndResize(
+        batchImage,
+        tf.tensor2d(box),
+        tf.tensor1d(boxInd, "int32"),
+        [targetH, targetW],
+      );
+
+      return cropped.div(tf.scalar(127.5)).sub(tf.scalar(1.0));
     });
   }
 
