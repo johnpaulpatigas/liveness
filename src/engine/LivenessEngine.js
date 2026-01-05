@@ -46,8 +46,7 @@ export class LivenessEngine {
   async load() {
     try {
       this.#faceMesh = new FaceMesh({
-        locateFile: (file) =>
-          `https://cdn.jsdelivr.net/npm/@mediapipe/face_mesh/${file}`,
+        locateFile: (file) => `/face_mesh/${file}`,
       });
       this.#faceMesh.setOptions({
         maxNumFaces: 1,
@@ -57,12 +56,9 @@ export class LivenessEngine {
       });
       this.#faceMesh.onResults(this.#onFaceMeshResults.bind(this));
 
-      const modelUrl =
-        "https://www.kaggle.com/models/google/mobilenet-v2/TfJs/140-224-feature-vector/3";
+      const modelUrl = "/mobilenet-v2/model.json";
 
-      this.#recognitionModel = await tf.loadGraphModel(modelUrl, {
-        fromTFHub: true,
-      });
+      this.#recognitionModel = await tf.loadGraphModel(modelUrl);
 
       this.#isReady = true;
       this.#callbacks.onReady();
