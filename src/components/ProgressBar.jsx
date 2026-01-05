@@ -46,9 +46,9 @@ export function ProgressBar({ progress, direction }) {
         <Arrow direction="left" />
       </div>
 
-      <div className="flex-grow h-3 bg-white/20 rounded-full overflow-hidden">
+      <div className="grow h-3 bg-white/20 rounded-full overflow-hidden">
         <div
-          className="h-full bg-gradient-to-r from-blue-500 to-indigo-500 transition-all duration-100 ease-out"
+          className="h-full bg-linear-to-r from-blue-500 to-indigo-500 transition-all duration-100 ease-out"
           style={{ width: `${clampedProgress * 100}%` }}
         />
       </div>

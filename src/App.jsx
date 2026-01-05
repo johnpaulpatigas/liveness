@@ -37,7 +37,7 @@ function App() {
         </div>
       </nav>
 
-      <main className="flex-grow flex flex-col items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+      <main className="grow flex flex-col items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
         <div className="text-center max-w-3xl mx-auto mb-10">
           <div className="inline-block px-3 py-1 mb-4 text-xs font-semibold tracking-wider text-blue-600 uppercase bg-blue-100 rounded-full">
             Information Technology Capstone 2026
@@ -54,7 +54,7 @@ function App() {
         </div>
 
         <div className="w-full max-w-4xl bg-white rounded-2xl shadow-xl border border-slate-100 overflow-hidden ring-1 ring-slate-900/5">
-          <div className="p-1 bg-gradient-to-r from-blue-500 via-indigo-500 to-purple-500 opacity-80"></div>
+          <div className="p-1 bg-linear-to-r from-blue-500 via-indigo-500 to-purple-500 opacity-80"></div>
           <div className="p-6 sm:p-10">
             <LivenessChecker />
           </div>

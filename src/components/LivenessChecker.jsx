@@ -190,7 +190,7 @@ export function LivenessChecker() {
           </div>
         )}
 
-      <div className="relative w-full aspect-[4/3] bg-black rounded-2xl overflow-hidden shadow-2xl ring-1 ring-slate-900/10">
+      <div className="relative w-full aspect-4/3 bg-black rounded-2xl overflow-hidden shadow-2xl ring-1 ring-slate-900/10">
         <video
           ref={videoRef}
           playsInline
