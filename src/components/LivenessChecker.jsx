@@ -23,8 +23,7 @@ export function LivenessChecker() {
   const [uiState, setUiState] = useState(UI_STATE.IDLE);
   const [mode, setMode] = useState(MODE.ENROLL);
   const [instruction, setInstruction] = useState("");
-  const [storedDescriptor, setStoredDescriptor] = useState(null);
-  const [enrolledName, setEnrolledName] = useState("");
+  const [enrolledUsers, setEnrolledUsers] = useState([]);
   const [userName, setUserName] = useState("");
   const [matchScore, setMatchScore] = useState(null);
   const [currentChallenge, setCurrentChallenge] = useState(null);
@@ -34,23 +33,28 @@ export function LivenessChecker() {
   const canvasRef = useRef(null);
   const sdkRef = useRef(null);
   const userNameRef = useRef(userName);
+  const enrolledUsersRef = useRef(enrolledUsers);
 
   useEffect(() => {
     userNameRef.current = userName;
   }, [userName]);
 
   useEffect(() => {
+    enrolledUsersRef.current = enrolledUsers;
+  }, [enrolledUsers]);
+
+  useEffect(() => {
     const saved = localStorage.getItem("face_identity");
     if (saved) {
-      const parsed = JSON.parse(saved);
-      if (Array.isArray(parsed)) {
-        setStoredDescriptor(parsed);
-        setEnrolledName("Unknown User");
-      } else {
-        setStoredDescriptor(parsed.descriptor);
-        setEnrolledName(parsed.name);
+      try {
+        const users = JSON.parse(saved);
+        if (Array.isArray(users) && users.length > 0) {
+          setEnrolledUsers(users);
+          setMode(MODE.VERIFY);
+        }
+      } catch (e) {
+        console.error("Failed to parse enrolled identities", e);
       }
-      setMode(MODE.VERIFY);
     }
   }, []);
 
@@ -82,27 +86,36 @@ export function LivenessChecker() {
       setCurrentChallenge(null);
 
       if (mode === MODE.ENROLL) {
-        const payload = { name: userNameRef.current || "User", descriptor };
-        localStorage.setItem("face_identity", JSON.stringify(payload));
-        setStoredDescriptor(descriptor);
-        setEnrolledName(payload.name);
+        const newIdentity = { name: userNameRef.current || "User", descriptor };
+        setEnrolledUsers((prev) => {
+          const updated = [...prev, newIdentity];
+          localStorage.setItem("face_identity", JSON.stringify(updated));
+          return updated;
+        });
         setUiState(UI_STATE.SUCCESS);
-        setInstruction("Identity Enrolled Successfully!");
+        setInstruction(
+          `Identity Enrolled Successfully for ${newIdentity.name}!`,
+        );
+        setUserName("");
       } else {
-        const saved = localStorage.getItem("face_identity");
-        if (saved) {
-          const parsed = JSON.parse(saved);
-          const savedDescriptor = Array.isArray(parsed)
-            ? parsed
-            : parsed.descriptor;
-          const savedName = Array.isArray(parsed) ? "User" : parsed.name;
+        if (enrolledUsersRef.current.length > 0) {
+          let bestMatch = { score: -1, name: "Unknown" };
 
-          const score = calculateCosineSimilarity(descriptor, savedDescriptor);
-          setMatchScore(score);
+          enrolledUsersRef.current.forEach((user) => {
+            const score = calculateCosineSimilarity(
+              descriptor,
+              user.descriptor,
+            );
+            if (score > bestMatch.score) {
+              bestMatch = { score, name: user.name };
+            }
+          });
+
+          setMatchScore(bestMatch.score);
           setUiState(UI_STATE.SUCCESS);
           setInstruction(
-            score > 0.8
-              ? `Identity Verified! Welcome, ${savedName}.`
+            bestMatch.score > 0.8
+              ? `Identity Verified! Welcome, ${bestMatch.name}.`
               : "Identity Mismatch!",
           );
         }
@@ -143,11 +156,23 @@ export function LivenessChecker() {
 
   const clearIdentity = () => {
     localStorage.removeItem("face_identity");
-    setStoredDescriptor(null);
-    setEnrolledName("");
+    setEnrolledUsers([]);
     setUserName("");
     setMode(MODE.ENROLL);
     setUiState(UI_STATE.READY_TO_START);
+  };
+
+  const removeIdentity = (indexToRemove) => {
+    setEnrolledUsers((prev) => {
+      const updated = prev.filter((_, index) => index !== indexToRemove);
+      if (updated.length === 0) {
+        localStorage.removeItem("face_identity");
+        setMode(MODE.ENROLL);
+      } else {
+        localStorage.setItem("face_identity", JSON.stringify(updated));
+      }
+      return updated;
+    });
   };
 
   return (
@@ -165,7 +190,7 @@ export function LivenessChecker() {
         </button>
         <button
           onClick={() => setMode(MODE.VERIFY)}
-          disabled={!storedDescriptor}
+          disabled={enrolledUsers.length === 0}
           className={`flex-1 py-2 text-sm font-semibold rounded-lg transition-all ${
             mode === MODE.VERIFY
               ? "bg-white shadow text-blue-600"
@@ -176,19 +201,17 @@ export function LivenessChecker() {
         </button>
       </div>
 
-      {mode === MODE.ENROLL &&
-        uiState === UI_STATE.READY_TO_START &&
-        !storedDescriptor && (
-          <div className="mb-4 w-full max-w-sm">
-            <input
-              type="text"
-              placeholder="Enter your full name"
-              value={userName}
-              onChange={(e) => setUserName(e.target.value)}
-              className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
-            />
-          </div>
-        )}
+      {mode === MODE.ENROLL && uiState === UI_STATE.READY_TO_START && (
+        <div className="mb-4 w-full max-w-sm">
+          <input
+            type="text"
+            placeholder="Enter your full name"
+            value={userName}
+            onChange={(e) => setUserName(e.target.value)}
+            className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
+          />
+        </div>
+      )}
 
       <div className="relative w-full aspect-4/3 bg-black rounded-2xl overflow-hidden shadow-2xl ring-1 ring-slate-900/10">
         <video
@@ -296,37 +319,65 @@ export function LivenessChecker() {
         )}
       </div>
 
-      {storedDescriptor && (
-        <div className="mt-8 w-full p-6 bg-white border border-slate-200 rounded-2xl shadow-sm flex items-center justify-between">
-          <div className="flex items-center gap-4">
-            <div className="w-12 h-12 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center">
-              <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
-                <path
-                  fillRule="evenodd"
-                  d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z"
-                  clipRule="evenodd"
-                ></path>
-              </svg>
-            </div>
-            <div>
-              <p className="text-sm font-bold text-slate-800 uppercase tracking-tight">
-                Identity Enrolled
-              </p>
-              <p className="text-lg font-medium text-slate-900">
-                {enrolledName}
-              </p>
-              <p className="text-xs text-slate-500">
-                Vector ID:{" "}
-                {storedDescriptor.slice(0, 1).map((n) => n.toFixed(6))}...
-              </p>
-            </div>
+      {enrolledUsers.length > 0 && (
+        <div className="mt-8 w-full bg-white border border-slate-200 rounded-2xl shadow-sm overflow-hidden">
+          <div className="px-6 py-4 border-b border-slate-100 flex justify-between items-center bg-slate-50/50">
+            <h3 className="font-bold text-slate-800">
+              Enrolled Identities ({enrolledUsers.length})
+            </h3>
+            <button
+              onClick={clearIdentity}
+              className="text-xs font-bold text-red-500 hover:text-red-700 uppercase tracking-wider"
+            >
+              Clear All
+            </button>
           </div>
-          <button
-            onClick={clearIdentity}
-            className="text-xs font-bold text-red-500 hover:text-red-700 uppercase tracking-wider"
-          >
-            Clear Identity
-          </button>
+          <ul className="divide-y divide-slate-100 max-h-64 overflow-y-auto">
+            {enrolledUsers.map((user, index) => (
+              <li
+                key={index}
+                className="px-6 py-4 flex items-center justify-between hover:bg-slate-50 transition-colors"
+              >
+                <div className="flex items-center gap-4">
+                  <div className="w-10 h-10 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center font-bold text-sm">
+                    {(user.name || "U").charAt(0).toUpperCase()}
+                  </div>
+                  <div>
+                    <p className="font-medium text-slate-900">
+                      {user.name || "Unknown User"}
+                    </p>
+                    <p className="text-xs text-slate-500 font-mono">
+                      ID:{" "}
+                      {user.descriptor
+                        .slice(0, 3)
+                        .map((n) => n.toFixed(2))
+                        .join(", ")}
+                      ...
+                    </p>
+                  </div>
+                </div>
+                <button
+                  onClick={() => removeIdentity(index)}
+                  className="text-slate-400 hover:text-red-500 p-2 rounded-full hover:bg-red-50 transition-all"
+                  title="Remove User"
+                >
+                  <svg
+                    className="w-5 h-5"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="2"
+                      d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+                    ></path>
+                  </svg>
+                </button>
+              </li>
+            ))}
+          </ul>
         </div>
       )}
     </div>
