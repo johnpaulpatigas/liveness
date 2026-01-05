@@ -1,6 +1,6 @@
-# LivenessAI - Biometric Liveness Detection and Identity Verification System
+# Liveness SDK
 
-An event-driven JavaScript SDK for browser-based **Active Liveness Detection** and **Biometric Identity Verification**. This library leverages MediaPipe Face Mesh and TensorFlow.js (MobileNet V2) to provide a complete eKYC-ready frontend solution.
+An event-driven JavaScript SDK for browser-based **Active Liveness Detection** and **Face Identity Verification**. This library leverages MediaPipe Face Mesh and TensorFlow.js (MobileNet V2) to provide a complete eKYC-ready frontend solution.
 
 Developed as a Bachelor of Science in Information Technology Capstone Project (2026).
 
@@ -82,6 +82,7 @@ Identity verification is performed using **Cosine Similarity**, which measures t
 | `progress`  | `{ progress, rawValue }` | Real-time feedback for head turns. |
 | `success`   | `{ descriptor }`         | Liveness passed; vector generated. |
 | `failure`   | `{ code, message }`      | Challenge failed or face lost.     |
+| `error`     | `Error`                  | Critical setup/runtime errors.     |
 
 ## Integration Guide (Backend)
 
@@ -183,7 +184,7 @@ The core algorithms of the system are rigorously tested using **Vitest** to ensu
 
 ### 4. SDK Distribution
 
-To distribute the Liveness Engine as a standalone library for other developers:
+To distribute the Liveness SDK as a standalone library for other developers:
 
 - **Build Command**: `npm run build:sdk`
 - **Output**: Generates a `dist-sdk/` directory containing:

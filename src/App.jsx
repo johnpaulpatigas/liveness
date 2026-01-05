@@ -12,18 +12,20 @@ function App() {
                 L
               </div>
               <span className="font-bold text-xl tracking-tight text-slate-800">
-                Liveness<span className="text-blue-600">AI</span>
+                Liveness <span className="text-blue-600">SDK</span>
               </span>
             </div>
             <div className="hidden md:flex gap-6 text-sm font-medium text-slate-600">
-              <a href="#" className="hover:text-blue-600 transition-colors">
-                Thesis
-              </a>
-              <a href="#" className="hover:text-blue-600 transition-colors">
+              <a
+                href="https://github.com/johnpaulpatigas/liveness/blob/main/README.md"
+                target="_blank"
+                rel="noreferrer"
+                className="hover:text-blue-600 transition-colors"
+              >
                 Documentation
               </a>
               <a
-                href="https://github.com"
+                href="https://github.com/johnpaulpatigas/liveness"
                 target="_blank"
                 rel="noreferrer"
                 className="hover:text-blue-600 transition-colors"
@@ -41,13 +43,13 @@ function App() {
             Information Technology Capstone 2026
           </div>
           <h1 className="text-4xl sm:text-5xl font-extrabold text-slate-900 tracking-tight mb-4">
-            Secure Face Liveness Detection
+            Liveness SDK
           </h1>
           <p className="text-lg sm:text-xl text-slate-600 leading-relaxed">
-            A framework-agnostic SDK for active liveness verification using{" "}
+            A framework-agnostic SDK for active liveness detection and face
+            matching using{" "}
             <span className="font-semibold text-slate-800">MediaPipe</span> and{" "}
             <span className="font-semibold text-slate-800">TensorFlow.js</span>.
-            Prevents spoofing attacks with randomized challenges.
           </p>
         </div>
 
