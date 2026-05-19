@@ -1,0 +1,1 @@
+ari nalng nako gibutang kay wa koy kalibutan unsaon ni, unya guba gihapon ang sa windows HAHAHA
