@@ -1,9 +1,12 @@
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import * as authRepositories from "../repositories/auth.repository.js";
+import crypto from "crypto";
+import nodemailer from "nodemailer";
 
 const JWT_SECRET =
   process.env.JWT_SECRET || "your-fallback-secret-for-dev-only";
+const APP_URL = process.env.APP_URL || "http://localhost:5173";
 
 export async function signup(username, password, firstName, lastName, email) {
   const saltRounds = 10;
@@ -56,4 +59,54 @@ export async function login(username, password) {
     subscriptionTier: admin.subscription_tier,
     token: token,
   };
+}
+
+export async function forgotPassword(email) {
+  const admin = await authRepositories.findAdminByEmail(email);
+  if (!admin) {
+    return;
+  }
+  const token = crypto.randomBytes(24).toString("hex");
+  const tokenHash = crypto.createHash("sha256").update(token).digest("hex");
+  const expiresAt = new Date(Date.now() + 30 * 60 * 1000);
+  await authRepositories.addToken(admin.id, expiresAt, tokenHash);
+  const resetLink = `${APP_URL}/reset-password?token=${token}`;
+  await sendResetPasswordEmail(admin.email, resetLink);
+}
+
+const transporter = nodemailer.createTransport({
+  service: "gmail",
+  auth: {
+    user: process.env.GMAIL_USER,
+    pass: process.env.GMAIL_APP_PASSWORD,
+  },
+});
+
+async function sendResetPasswordEmail(to, resetLink) {
+  await transporter.sendMail({
+    from: process.env.GMAIL_USER,
+    to,
+    subject: "Password reset request",
+    html: `<p>Click the link below to reset your password. This link expires in 30 minutes.</p><p><a href="${resetLink}">${resetLink}</a></p>`,
+  });
+}
+
+export async function resetPassword(token, newPassword) {
+  const tokenHash = crypto.createHash("sha256").update(token).digest("hex");
+  const resetToken = await authRepositories.findValidResetToken(tokenHash);
+
+  const isInvalid =
+    !resetToken ||
+    resetToken.used_at ||
+    new Date(resetToken.expires_at) < new Date();
+
+  if (isInvalid) {
+    const error = new Error("Invalid or expired reset token");
+    error.status = 400;
+    throw error;
+  }
+
+  const passwordHash = await bcrypt.hash(newPassword, 10);
+  await authRepositories.updateAdminPassword(resetToken.admin_id, passwordHash);
+  await authRepositories.markTokenUsed(resetToken.id);
 }

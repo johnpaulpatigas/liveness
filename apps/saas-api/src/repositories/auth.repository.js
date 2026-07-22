@@ -20,3 +20,40 @@ export async function findAdminByUsername(username) {
   ]);
   return result.rows[0];
 }
+
+export async function findAdminByEmail(email) {
+  const result = await pool.query("SELECT * FROM admins WHERE email = $1", [
+    email,
+  ]);
+  return result.rows[0];
+}
+
+export async function addToken(adminId, expiresAt, token_hash) {
+  const result = await pool.query(
+    "INSERT INTO password_reset_tokens(admin_id, expires_at, token_hash) VALUES($1, $2, $3)",
+    [adminId, expiresAt, token_hash],
+  );
+  return result;
+}
+
+export async function findValidResetToken(tokenHash) {
+  const result = await pool.query(
+    "SELECT id, admin_id, expires_at, used_at FROM password_reset_tokens WHERE token_hash = $1",
+    [tokenHash],
+  );
+  return result.rows[0];
+}
+
+export async function markTokenUsed(tokenId) {
+  await pool.query(
+    "UPDATE password_reset_tokens SET used_at = NOW() WHERE id = $1",
+    [tokenId],
+  );
+}
+
+export async function updateAdminPassword(adminId, passwordHash) {
+  await pool.query("UPDATE admins SET password_hash = $1 WHERE id = $2", [
+    passwordHash,
+    adminId,
+  ]);
+}

@@ -14,6 +14,21 @@ const loginSchema = z.object({
   password: z.string().min(6, "Password must be at least 6 characters"),
 });
 
+const forgotPasswordSchema = z.object({
+  email: z.string().email(),
+});
+
+const resetPasswordSchema = z.object({
+  token: z.string().min(1, "Token is required"),
+  newPassword: z
+    .string()
+    .min(6, "Password must be at least 6 characters")
+    .regex(/[A-Z]/, "Password must have at least 1 upper case.")
+    .regex(/[a-z]/, "Password must have at least 1 lower case.")
+    .regex(/[0-9]/, "Password must have at least 1 number.")
+    .max(72, "Password must not exceed 72 characters"),
+});
+
 export async function signup(req, res) {
   const validation = signupSchema.safeParse(req.body);
   if (!validation.success) {
@@ -65,5 +80,40 @@ export async function login(req, res) {
       return res.status(error.status).json({ error: error.message });
     }
     res.status(500).json({ error: "An error occurred during login" });
+  }
+}
+
+export async function forgotPassword(req, res) {
+  const validation = forgotPasswordSchema.safeParse(req.body);
+  if (!validation.success) {
+    return res.status(400).json({ error: validation.error.issues[0].message });
+  }
+  const { email } = validation.data;
+  try {
+    await authServices.forgotPassword(email);
+    res.json({
+      message: "If that email is registered, a reset link has been sent.",
+    });
+  } catch (error) {
+    console.error("Forgot password error:", error);
+    res.status(500).json({ error: "Something went wrong." });
+  }
+}
+
+export async function resetPassword(req, res) {
+  const validation = resetPasswordSchema.safeParse(req.body);
+  if (!validation.success) {
+    return res.status(400).json({ error: validation.error.issues[0].message });
+  }
+  const { token, newPassword } = validation.data;
+  try {
+    await authServices.resetPassword(token, newPassword);
+    res.status(204).send();
+  } catch (error) {
+    console.error("Reset password error:", error);
+    if (error.status) {
+      return res.status(error.status).json({ error: error.message });
+    }
+    res.status(500).json({ error: "Failed to reset password." });
   }
 }
