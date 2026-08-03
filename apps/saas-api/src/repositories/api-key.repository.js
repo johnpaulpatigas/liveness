@@ -39,3 +39,22 @@ export async function deleteApiKey(id, adminId) {
   );
   return result.rowCount;
 }
+
+export async function findByKeyHash(hash) {
+  const result = await pool.query(
+    `SELECT k.admin_id as "adminId", a.subscription_tier as "subscriptionTier"
+       FROM api_keys k
+       JOIN admins a ON k.admin_id = a.id
+       WHERE k.key_hash = $1`,
+    [hash],
+  );
+  return result.rows;
+}
+
+export async function countVerificationsSince(adminId, startOfMonth) {
+  const countResult = await pool.query(
+    "SELECT COUNT(*) FROM verification_logs WHERE admin_id = $1 AND timestamp >= $2",
+    [adminId, startOfMonth],
+  );
+  return countResult.rows[0];
+}

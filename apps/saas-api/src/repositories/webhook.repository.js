@@ -31,3 +31,25 @@ export async function getWebhookLogs(adminId) {
   );
   return result.rows;
 }
+
+export async function getActiveWebhooks(adminId) {
+  const webhooks = await pool.query(
+    "SELECT id, url, secret FROM webhooks WHERE admin_id = $1 AND is_active = TRUE",
+    [adminId],
+  );
+  return webhooks.rows;
+}
+
+export async function addWebhookLog(webhookId, adminId, event, webhookUrl, status, bodyText, latency) {
+  await pool.query(
+    "INSERT INTO webhook_logs (webhook_id, admin_id, event, url, status_code, response_body, latency_ms) VALUES ($1, $2, $3, $4, $5, $6, $7)",
+    [webhookId, adminId, event, webhookUrl, status, bodyText, latency],
+  );
+}
+
+export async function addWebhookErrorLog(webhookId, adminId, event, webhookUrl, errMessage, latency) {
+  await pool.query(
+    "INSERT INTO webhook_logs (webhook_id, admin_id, event, url, error_message, latency_ms) VALUES ($1, $2, $3, $4, $5, $6)",
+    [webhookId, adminId, event, webhookUrl, errMessage, latency],
+  );
+}

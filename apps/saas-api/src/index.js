@@ -3,8 +3,7 @@ import cookieParser from "cookie-parser";
 import "dotenv/config";
 import express from "express";
 import pool from "./db.js";
-import dashboardRoutes from "./routes/dashboard.js";
-import livenessRoutes from "./routes/liveness.js";
+import routes from "./routes/index.js";
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -25,8 +24,7 @@ app.use(cookieParser());
 app.use(express.json({ limit: "1mb" }));
 
 // Routes
-app.use("/api/liveness", livenessRoutes);
-app.use("/api/dashboard", dashboardRoutes);
+app.use("/api", routes);
 
 // Health check
 app.get("/health", async (req, res) => {

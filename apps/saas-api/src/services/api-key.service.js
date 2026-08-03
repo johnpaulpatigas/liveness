@@ -37,3 +37,35 @@ export async function deleteApiKey(id, adminId) {
   const deleteCount = await apiKeyRepositories.deleteApiKey(id, adminId);
   return deleteCount;
 }
+
+export async function findAdminByApiKey(apiKey) {
+  const hash = crypto.createHash("sha256").update(apiKey).digest("hex");
+  const apiKeys = await apiKeyRepositories.findByKeyHash(hash);
+  if (apiKeys.length === 0) {
+    const error = new Error("Invalid API key");
+    error.status = 401;
+    throw error;
+  }
+
+  const { adminId, subscriptionTier } = apiKeys[0];
+
+  if (subscriptionTier === "free") {
+    const startOfMonth = new Date();
+    startOfMonth.setDate(1);
+    startOfMonth.setHours(0, 0, 0, 0);
+
+    const countResult = await apiKeyRepositories.countVerificationsSince(
+      adminId,
+      startOfMonth,
+    );
+    const count = parseInt(countResult.count);
+    if (count >= 1000) {
+      const error = new Error(
+        "Verification monthly quota exceeded. Starter plan is limited to 1,000 checks per month. Please upgrade to Pro.",
+      );
+      error.status = 402;
+      throw error;
+    }
+  }
+  return adminId;
+}
