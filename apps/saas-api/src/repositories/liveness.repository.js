@@ -24,3 +24,11 @@ export async function findClosestMatch(descriptor, adminId) {
   );
   return result.rows;
 }
+
+export async function findMatchById(descriptor, userId, adminId) {
+  const result = await pool.query(
+    "SELECT id, name, 1 - (descriptor <=> $1) AS similarity FROM users WHERE id = $2 AND admin_id = $3",
+    [formatVector(descriptor), userId, adminId],
+  );
+  return result.rows;
+}
