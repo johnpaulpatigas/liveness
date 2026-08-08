@@ -7,7 +7,7 @@ An event-driven JavaScript SDK for browser-based **Active Liveness Detection** a
 ## Key Features
 
 - **Randomized Active Challenges**: Prevents replay attacks by requiring users to perform random actions (Blink, Turn Left, Turn Right) generated at runtime.
-- **Identity Enrollment & Verification**: Full biometric flow including face feature extraction and Cosine Similarity matching (0.65 threshold with adaptive confidence rating).
+- **Identity Enrollment & Verification**: Full biometric flow including face feature extraction and Cosine Similarity matching (0.85 threshold with adaptive confidence rating).
 - **Advanced Anti-Spoofing**:
   - **FFT Moire Detection**: Detects digital screen sub-pixel patterns.
   - **Laplacian Texture Analysis**: Identifies low-quality print or digital screen textures.

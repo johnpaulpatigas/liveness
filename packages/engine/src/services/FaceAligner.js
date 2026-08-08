@@ -22,7 +22,7 @@ export class FaceAligner {
 
   constructor(options = {}) {
     this.#options = {
-      targetEyeRatio: 0.35, // Percentage of box width between eyes
+      targetEyeRatio: 0.42, // Tightened from 0.35 to focus strictly on facial features & reduce background bias
       paddingRatio: 0.25,
       ...options,
     };

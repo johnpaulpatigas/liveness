@@ -235,7 +235,7 @@ export function LivenessChecker() {
             setMatchScore(bestMatch.score);
             setUiState(UI_STATE.SUCCESS);
             setInstruction(
-              bestMatch.score > 0.65
+              bestMatch.score > 0.85
                 ? `Identity Verified! Welcome, ${bestMatch.name}.`
                 : "Identity Mismatch!",
             );
@@ -452,14 +452,14 @@ export function LivenessChecker() {
         {uiState === UI_STATE.SUCCESS && (
           <div
             className={`absolute inset-0 z-30 flex flex-col items-center justify-center text-white backdrop-blur-md ${
-              (mode === MODE.VERIFY && matchScore < 0.65) ||
+              (mode === MODE.VERIFY && matchScore < 0.85) ||
               instruction.includes("Mismatch")
                 ? "bg-red-500/90"
                 : "bg-green-500/90"
             }`}
           >
             <div className="mb-4 flex h-20 w-20 items-center justify-center rounded-full bg-white shadow-xl">
-              {(mode === MODE.VERIFY && matchScore < 0.65) ||
+              {(mode === MODE.VERIFY && matchScore < 0.85) ||
               instruction.includes("Mismatch") ? (
                 <svg
                   className="h-10 w-10 text-red-600"

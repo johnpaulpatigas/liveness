@@ -24,7 +24,7 @@ const DEFAULT_CONFIG = {
   maxBrightness: 0.95,
   maxFFTPeak: 180.0,
   challenges: null,
-  minIdentitySimilarity: 0.70,
+  minIdentitySimilarity: 0.85,
 };
 
 /**

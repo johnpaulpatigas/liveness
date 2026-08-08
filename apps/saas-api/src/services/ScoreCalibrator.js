@@ -9,7 +9,7 @@
 export class ScoreCalibrator {
   #baseThreshold;
 
-  constructor(baseThreshold = 0.65) {
+  constructor(baseThreshold = 0.85) {
     this.#baseThreshold = baseThreshold;
   }
 
@@ -35,11 +35,11 @@ export class ScoreCalibrator {
     }
 
     // Apply adjustment if identity continuity across challenges had high stability
-    if (identityContinuity && identityContinuity.minSimilarity > 0.85) {
+    if (identityContinuity && identityContinuity.minSimilarity > 0.88) {
       threshold -= 0.02; // Reward high intra-session identity stability
     }
 
-    return Math.max(0.5, Math.min(0.95, threshold));
+    return Math.max(0.65, Math.min(0.95, threshold));
   }
 
   /**
@@ -53,9 +53,9 @@ export class ScoreCalibrator {
     let confidence = "NONE";
 
     if (verified) {
-      if (rawSimilarity >= effectiveThreshold + 0.15) {
+      if (rawSimilarity >= effectiveThreshold + 0.08) {
         confidence = "HIGH";
-      } else if (rawSimilarity >= effectiveThreshold + 0.05) {
+      } else if (rawSimilarity >= effectiveThreshold + 0.04) {
         confidence = "MEDIUM";
       } else {
         confidence = "LOW";

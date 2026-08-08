@@ -23,7 +23,7 @@ export async function enrollUser(adminId, name, descriptor, antiSpoofing) {
 }
 
 export async function verifyUser(descriptor, threshold, antiSpoofing, identityContinuity, adminId) {
-  const calibrator = new ScoreCalibrator(threshold !== undefined ? threshold : 0.65);
+  const calibrator = new ScoreCalibrator(threshold !== undefined ? threshold : 0.85);
   const effectiveThreshold = calibrator.calculateAdaptiveThreshold({
     antiSpoofing: antiSpoofing,
     identityContinuity: identityContinuity,

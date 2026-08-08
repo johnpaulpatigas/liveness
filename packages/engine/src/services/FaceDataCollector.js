@@ -14,7 +14,7 @@ export class FaceDataCollector {
   #minSimilarityThreshold;
 
   constructor(options = {}) {
-    this.#minSimilarityThreshold = options.minSimilarityThreshold ?? 0.7;
+    this.#minSimilarityThreshold = options.minSimilarityThreshold ?? 0.85;
   }
 
   /**
