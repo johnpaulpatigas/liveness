@@ -18,9 +18,9 @@ services:
         sync: false # e.g. https://liveness.cloud
       - key: APP_URL
         sync: false # e.g. https://liveness.cloud
-      - key: GMAIL_USER
+      - key: RESEND_API_KEY
         sync: false
-      - key: GMAIL_APP_PASSWORD
+      - key: RESEND_FROM_EMAIL
         sync: false
       - key: COOKIE_SAME_SITE
         value: none
