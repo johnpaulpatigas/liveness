@@ -148,7 +148,12 @@ export default function ApiKeys() {
               className="fixed inset-0 cursor-pointer"
               onClick={closeCreateModal}
             />
-            <div className="animate-in zoom-in-95 relative z-10 w-full max-w-md overflow-hidden rounded-2xl border border-slate-200/80 bg-white p-6 shadow-2xl duration-200">
+            <div
+              role="dialog"
+              aria-modal="true"
+              aria-labelledby="create-key-modal-title"
+              className="animate-in zoom-in-95 relative z-10 w-full max-w-md overflow-hidden rounded-2xl border border-slate-200/80 bg-white p-6 shadow-2xl duration-200"
+            >
               {/* Modal Header & Close Button */}
               <div className="mb-5 flex items-start justify-between">
                 <div className="flex items-center gap-3">
@@ -156,7 +161,10 @@ export default function ApiKeys() {
                     <Key className="h-5 w-5" />
                   </div>
                   <div>
-                    <h2 className="text-base font-extrabold text-slate-900">
+                    <h2
+                      id="create-key-modal-title"
+                      className="text-base font-extrabold text-slate-900"
+                    >
                       Issue New API Key
                     </h2>
                     <p className="text-xs font-medium text-slate-500">
@@ -176,18 +184,27 @@ export default function ApiKeys() {
 
               <form onSubmit={handleCreateKey} className="flex flex-col gap-4">
                 {error && (
-                  <div className="flex items-center gap-2 rounded-xl border border-rose-200 bg-rose-50 p-3 text-xs font-bold text-rose-700">
+                  <div
+                    role="alert"
+                    className="flex items-center gap-2 rounded-xl border border-rose-200 bg-rose-50 p-3 text-xs font-bold text-rose-700"
+                  >
                     <AlertCircle className="h-4 w-4 shrink-0" />
                     {error}
                   </div>
                 )}
 
                 <div>
-                  <label className="mb-1.5 block text-xs font-extrabold tracking-wider text-slate-700 uppercase">
+                  <label
+                    htmlFor="newKeyName"
+                    className="mb-1.5 block text-xs font-extrabold tracking-wider text-slate-700 uppercase"
+                  >
                     Key Label Name <span className="text-rose-500">*</span>
                   </label>
                   <input
+                    id="newKeyName"
                     type="text"
+                    required
+                    aria-required="true"
                     placeholder="e.g. Production iOS Mobile App"
                     value={newKeyName}
                     onChange={(e) => setNewKeyName(e.target.value)}
@@ -354,12 +371,20 @@ export default function ApiKeys() {
               className="fixed inset-0 cursor-pointer"
               onClick={() => setShowKeyModal(null)}
             />
-            <div className="animate-in zoom-in-95 relative z-10 w-full max-w-md overflow-hidden rounded-2xl border border-slate-200/80 bg-white p-6 shadow-2xl duration-200">
+            <div
+              role="dialog"
+              aria-modal="true"
+              aria-labelledby="key-generated-modal-title"
+              className="animate-in zoom-in-95 relative z-10 w-full max-w-md overflow-hidden rounded-2xl border border-slate-200/80 bg-white p-6 shadow-2xl duration-200"
+            >
               <div className="mb-4 flex h-10 w-10 items-center justify-center rounded-lg bg-blue-50 text-blue-600">
                 <Key className="h-5 w-5" />
               </div>
 
-              <h2 className="text-lg font-bold text-slate-900">
+              <h2
+                id="key-generated-modal-title"
+                className="text-lg font-bold text-slate-900"
+              >
                 API Key Generated Successfully
               </h2>
               <p className="mt-1 text-xs font-medium text-slate-500">
@@ -418,7 +443,12 @@ export default function ApiKeys() {
               className="fixed inset-0 cursor-pointer"
               onClick={closeDeleteModal}
             />
-            <div className="animate-in zoom-in-95 relative z-10 w-full max-w-md overflow-hidden rounded-2xl border border-slate-200/80 bg-white p-6 shadow-2xl duration-200">
+            <div
+              role="dialog"
+              aria-modal="true"
+              aria-labelledby="revoke-key-modal-title"
+              className="animate-in zoom-in-95 relative z-10 w-full max-w-md overflow-hidden rounded-2xl border border-slate-200/80 bg-white p-6 shadow-2xl duration-200"
+            >
               {/* Modal Header */}
               <div className="mb-5 flex items-start justify-between">
                 <div className="flex items-center gap-3">
@@ -426,7 +456,10 @@ export default function ApiKeys() {
                     <AlertTriangle className="h-5 w-5" />
                   </div>
                   <div>
-                    <h2 className="text-base font-extrabold text-slate-900">
+                    <h2
+                      id="revoke-key-modal-title"
+                      className="text-base font-extrabold text-slate-900"
+                    >
                       Revoke API Key
                     </h2>
                     <p className="text-xs font-medium text-slate-500">
@@ -464,7 +497,10 @@ export default function ApiKeys() {
                 </div>
 
                 <div>
-                  <label className="mb-2 block text-xs font-semibold text-slate-600">
+                  <label
+                    htmlFor="revoke-confirm-input"
+                    className="mb-2 block text-xs font-semibold text-slate-600"
+                  >
                     To confirm, type{" "}
                     <strong className="font-mono font-bold text-slate-900 select-all">
                       {deleteTarget.name}
@@ -473,6 +509,7 @@ export default function ApiKeys() {
                   </label>
                   <div className="relative">
                     <input
+                      id="revoke-confirm-input"
                       type="text"
                       value={confirmInput}
                       onChange={(e) => setConfirmInput(e.target.value)}

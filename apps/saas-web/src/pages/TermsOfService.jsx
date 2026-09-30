@@ -11,7 +11,10 @@ export default function TermsOfService() {
     <div className="min-h-screen bg-slate-50 font-sans text-slate-900 antialiased selection:bg-blue-100 selection:text-blue-900">
       <Navbar />
 
-      <main className="mx-auto max-w-4xl px-4 py-10 sm:px-6 sm:py-14 md:px-8">
+      <main
+        id="main-content"
+        className="mx-auto max-w-4xl px-4 py-10 sm:px-6 sm:py-14 md:px-8"
+      >
         <div className="mb-8">
           <Link
             to="/"

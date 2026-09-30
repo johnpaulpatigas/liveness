@@ -83,7 +83,10 @@ function PublicOnlyRoute({ children }) {
 function NotFound() {
   const user = useCurrentUser();
   return (
-    <main className="flex min-h-screen flex-col items-center justify-center bg-gradient-to-br from-slate-50 to-white px-4 text-center">
+    <main
+      id="main-content"
+      className="flex min-h-screen flex-col items-center justify-center bg-gradient-to-br from-slate-50 to-white px-4 text-center"
+    >
       <div className="mb-6 flex h-24 w-24 items-center justify-center rounded-3xl bg-slate-100">
         <span className="text-5xl font-black text-slate-300">404</span>
       </div>
@@ -137,6 +140,12 @@ function App() {
 
   return (
     <>
+      <a
+        href="#main-content"
+        className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-50 focus:rounded-xl focus:bg-blue-600 focus:px-4 focus:py-2.5 focus:text-xs focus:font-bold focus:text-white focus:shadow-xl focus:ring-2 focus:ring-blue-400 focus:outline-none"
+      >
+        Skip to main content
+      </a>
       <Suspense fallback={<PageLoadingFallback />}>
         <Routes location={backgroundLocation || location}>
           <Route

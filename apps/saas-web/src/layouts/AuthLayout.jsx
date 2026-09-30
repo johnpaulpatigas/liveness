@@ -35,7 +35,10 @@ export default function AuthLayout({ children }) {
         </div>
       </header>
 
-      <main className="flex flex-1 items-center justify-center p-4 sm:p-6 md:p-8">
+      <main
+        id="main-content"
+        className="flex flex-1 items-center justify-center p-4 sm:p-6 md:p-8"
+      >
         {children}
       </main>
 

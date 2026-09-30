@@ -78,7 +78,10 @@ export default function ForgotPassword({ modal = false }) {
             <KeyRound className="h-5 w-5 text-white" />
           </div>
           <div>
-            <h2 className="text-xl font-extrabold tracking-tight text-slate-900">
+            <h2
+              id="forgot-modal-title"
+              className="text-xl font-extrabold tracking-tight text-slate-900"
+            >
               Forgot Password
             </h2>
             <p className="text-xs font-medium text-slate-500">
@@ -99,7 +102,7 @@ export default function ForgotPassword({ modal = false }) {
       </div>
 
       {successMessage ? (
-        <div className="space-y-6 text-center">
+        <div role="status" className="space-y-6 text-center">
           <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-xl bg-emerald-50 text-emerald-600">
             <CheckCircle2 className="h-7 w-7" />
           </div>
@@ -124,7 +127,10 @@ export default function ForgotPassword({ modal = false }) {
         <form className="space-y-4" onSubmit={handleSubmit}>
           {/* Top Error Banner */}
           {!hasFieldErrors && error && (
-            <div className="flex items-start gap-2.5 rounded-lg border border-red-200 bg-red-50 p-3.5 text-xs text-red-700 shadow-2xs">
+            <div
+              role="alert"
+              className="flex items-start gap-2.5 rounded-lg border border-red-200 bg-red-50 p-3.5 text-xs text-red-700 shadow-2xs"
+            >
               <AlertCircle className="mt-0.5 h-4 w-4 shrink-0 text-red-600" />
               <div>
                 <p className="mb-0.5 font-bold text-red-800">Error</p>
@@ -157,6 +163,8 @@ export default function ForgotPassword({ modal = false }) {
                 required
                 autoFocus
                 value={email}
+                aria-invalid={Boolean(fieldErrors.email)}
+                aria-describedby={fieldErrors.email ? "email-error" : undefined}
                 onChange={(e) => {
                   setEmail(e.target.value);
                   if (fieldErrors.email) setFieldErrors({});
@@ -175,7 +183,11 @@ export default function ForgotPassword({ modal = false }) {
               )}
             </div>
             {fieldErrors.email && (
-              <p className="mt-1 ml-1 text-xs font-medium text-red-600">
+              <p
+                id="email-error"
+                role="alert"
+                className="mt-1 ml-1 text-xs font-medium text-red-600"
+              >
                 {fieldErrors.email}
               </p>
             )}
@@ -211,7 +223,12 @@ export default function ForgotPassword({ modal = false }) {
           className="absolute inset-0 bg-slate-900/40 backdrop-blur-xs"
           onClick={handleClose}
         />
-        <div className="animate-in zoom-in-95 relative w-full max-w-md duration-200">
+        <div
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="forgot-modal-title"
+          className="animate-in zoom-in-95 relative w-full max-w-md duration-200"
+        >
           <div className="rounded-2xl border border-slate-100 bg-white p-6 shadow-2xl sm:p-7">
             {formContent}
           </div>

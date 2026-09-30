@@ -177,8 +177,14 @@ export default function Settings() {
       </div>
 
       {/* Sub-navigation Tabs: Segmented Control */}
-      <div className="inline-flex items-center gap-0.5 rounded-xl border border-slate-200/60 bg-slate-100/80 p-1">
+      <div
+        role="tablist"
+        aria-label="Settings categories"
+        className="inline-flex items-center gap-0.5 rounded-xl border border-slate-200/60 bg-slate-100/80 p-1"
+      >
         <button
+          role="tab"
+          aria-selected={activeTab === "general"}
           onClick={() => setActiveTab("general")}
           className={`flex cursor-pointer items-center gap-2 rounded-lg border px-4 py-2 text-xs font-extrabold transition-colors duration-150 ${
             activeTab === "general"
@@ -193,6 +199,8 @@ export default function Settings() {
         </button>
 
         <button
+          role="tab"
+          aria-selected={activeTab === "security"}
           onClick={() => setActiveTab("security")}
           className={`flex cursor-pointer items-center gap-2 rounded-lg border px-4 py-2 text-xs font-extrabold transition-colors duration-150 ${
             activeTab === "security"
@@ -271,7 +279,10 @@ export default function Settings() {
               </div>
 
               {profileSuccess && (
-                <div className="animate-in fade-in mb-4 flex items-center gap-2.5 rounded-xl border border-emerald-200 bg-emerald-50 p-3.5 text-xs font-bold text-emerald-700 duration-200">
+                <div
+                  role="status"
+                  className="animate-in fade-in mb-4 flex items-center gap-2.5 rounded-xl border border-emerald-200 bg-emerald-50 p-3.5 text-xs font-bold text-emerald-700 duration-200"
+                >
                   <CheckCircle2 className="h-4 w-4 shrink-0" />
                   <span>{profileSuccess}</span>
                 </div>
@@ -342,7 +353,10 @@ export default function Settings() {
                 </div>
 
                 {profileError && (
-                  <p className="text-xs font-semibold text-rose-600">
+                  <p
+                    role="alert"
+                    className="text-xs font-semibold text-rose-600"
+                  >
                     {profileError}
                   </p>
                 )}
@@ -423,14 +437,20 @@ export default function Settings() {
                 className="max-w-lg space-y-4"
               >
                 {error && (
-                  <div className="animate-in fade-in flex items-center gap-2.5 rounded-xl border border-rose-200 bg-rose-50 p-3.5 text-xs font-bold text-rose-700 duration-200">
+                  <div
+                    role="alert"
+                    className="animate-in fade-in flex items-center gap-2.5 rounded-xl border border-rose-200 bg-rose-50 p-3.5 text-xs font-bold text-rose-700 duration-200"
+                  >
                     <AlertCircle className="h-4 w-4 shrink-0" />
                     <span>{error}</span>
                   </div>
                 )}
 
                 {success && (
-                  <div className="animate-in fade-in flex items-center gap-2.5 rounded-xl border border-emerald-200 bg-emerald-50 p-3.5 text-xs font-bold text-emerald-700 duration-200">
+                  <div
+                    role="status"
+                    className="animate-in fade-in flex items-center gap-2.5 rounded-xl border border-emerald-200 bg-emerald-50 p-3.5 text-xs font-bold text-emerald-700 duration-200"
+                  >
                     <CheckCircle2 className="h-4 w-4 shrink-0" />
                     <span>{success}</span>
                   </div>

@@ -353,7 +353,12 @@ export default function Logs() {
               className="fixed inset-0 cursor-pointer"
               onClick={() => setSelectedLog(null)}
             />
-            <div className="animate-in zoom-in-95 relative z-10 flex max-h-[90vh] w-full max-w-xl flex-col overflow-hidden rounded-2xl border border-slate-200/80 bg-white p-6 shadow-2xl duration-200">
+            <div
+              role="dialog"
+              aria-modal="true"
+              aria-labelledby="log-detail-modal-title"
+              className="animate-in zoom-in-95 relative z-10 flex max-h-[90vh] w-full max-w-xl flex-col overflow-hidden rounded-2xl border border-slate-200/80 bg-white p-6 shadow-2xl duration-200"
+            >
               {/* Header */}
               <div className="mb-4 flex shrink-0 items-start justify-between border-b border-slate-100 pb-4">
                 <div className="flex items-center gap-3">
@@ -361,7 +366,10 @@ export default function Logs() {
                     <Activity className="h-5 w-5" />
                   </div>
                   <div>
-                    <h2 className="text-base font-extrabold text-slate-900">
+                    <h2
+                      id="log-detail-modal-title"
+                      className="text-base font-extrabold text-slate-900"
+                    >
                       Telemetry Session Detail
                     </h2>
                     <p className="font-mono text-xs font-medium text-slate-500">

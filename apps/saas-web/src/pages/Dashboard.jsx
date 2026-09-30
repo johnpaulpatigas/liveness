@@ -231,11 +231,16 @@ export default function Dashboard() {
 
         <div className="flex flex-wrap items-center gap-3">
           {/* Time range selector */}
-          <div className="flex items-center rounded-lg border border-slate-200 bg-slate-100/70 p-0.5 text-xs font-semibold text-slate-600">
+          <div
+            role="group"
+            aria-label="Time range selector"
+            className="flex items-center rounded-lg border border-slate-200 bg-slate-100/70 p-0.5 text-xs font-semibold text-slate-600"
+          >
             {[7, 14, 30].map((days) => (
               <button
                 key={days}
                 type="button"
+                aria-pressed={timeRange === days}
                 onClick={() => setTimeRange(days)}
                 className={`cursor-pointer rounded-md px-2.5 py-1 transition-all ${
                   timeRange === days

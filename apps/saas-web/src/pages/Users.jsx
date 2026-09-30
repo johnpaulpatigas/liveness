@@ -228,7 +228,12 @@ export default function Users() {
               className="fixed inset-0 cursor-pointer"
               onClick={closeDeleteModal}
             />
-            <div className="animate-in zoom-in-95 relative z-10 w-full max-w-md overflow-hidden rounded-2xl border border-rose-100 bg-white shadow-2xl duration-200">
+            <div
+              role="dialog"
+              aria-modal="true"
+              aria-labelledby="delete-identity-modal-title"
+              className="animate-in zoom-in-95 relative z-10 w-full max-w-md overflow-hidden rounded-2xl border border-rose-100 bg-white shadow-2xl duration-200"
+            >
               {/* Prominent Red Accent Top Banner */}
               <div className="h-1.5 w-full bg-linear-to-r from-rose-500 via-red-500 to-rose-600" />
 
@@ -241,7 +246,10 @@ export default function Users() {
                     </div>
                     <div>
                       <div className="flex items-center gap-2">
-                        <h2 className="text-base font-black tracking-tight text-slate-900">
+                        <h2
+                          id="delete-identity-modal-title"
+                          className="text-base font-black tracking-tight text-slate-900"
+                        >
                           Delete Identity Profile
                         </h2>
                         <span className="rounded-full bg-rose-100 px-2 py-0.5 text-[9px] font-black text-rose-700 uppercase">
@@ -282,7 +290,10 @@ export default function Users() {
                   </div>
 
                   <div>
-                    <label className="mb-2 block text-xs font-extrabold text-slate-700">
+                    <label
+                      htmlFor="delete-identity-input"
+                      className="mb-2 block text-xs font-extrabold text-slate-700"
+                    >
                       To confirm, type{" "}
                       <span className="rounded-md border border-slate-200 bg-slate-100 px-2 py-0.5 font-mono font-bold text-slate-900 select-all">
                         {deleteTarget.name}
@@ -291,6 +302,7 @@ export default function Users() {
                     </label>
                     <div className="relative">
                       <input
+                        id="delete-identity-input"
                         type="text"
                         value={confirmInput}
                         onChange={(e) => setConfirmInput(e.target.value)}

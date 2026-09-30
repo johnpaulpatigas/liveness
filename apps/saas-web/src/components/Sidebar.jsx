@@ -170,6 +170,7 @@ export default function Sidebar({
 
       {/* Mobile Drawer Panel (Smooth Slide-In) */}
       <aside
+        aria-label="Mobile navigation"
         className={`fixed inset-y-0 right-0 z-50 flex w-72 max-w-[80vw] flex-col justify-between border-l border-slate-100 bg-white shadow-2xl transition-transform duration-300 ease-in-out md:hidden ${
           mobileMenuOpen ? "translate-x-0" : "translate-x-full"
         }`}
@@ -179,6 +180,7 @@ export default function Sidebar({
 
       {/* Desktop Sidebar (Smooth Hardware-Accelerated Collapse) */}
       <aside
+        aria-label="Sidebar navigation"
         className={`relative z-10 hidden h-screen shrink-0 flex-col justify-between overflow-hidden border-r border-slate-100 bg-white shadow-[1px_0_10px_rgba(0,0,0,0.02)] transition-[width] duration-300 ease-in-out md:flex ${
           sidebarCollapsed ? "w-20" : "w-64"
         }`}
@@ -206,6 +208,7 @@ export default function Sidebar({
                 onClick={() => setSearchModalOpen(true)}
                 className="flex h-8 w-8 cursor-pointer items-center justify-center rounded-xl text-slate-500 transition-colors hover:bg-blue-50 hover:text-blue-600"
                 title="Search Platform (Ctrl+K)"
+                aria-label="Search Platform (Ctrl+K)"
               >
                 <Search className="h-4 w-4" />
               </button>
@@ -219,6 +222,12 @@ export default function Sidebar({
                   ? "Expand Sidebar (Ctrl+B)"
                   : "Collapse Sidebar (Ctrl+B)"
               }
+              aria-label={
+                sidebarCollapsed
+                  ? "Expand Sidebar (Ctrl+B)"
+                  : "Collapse Sidebar (Ctrl+B)"
+              }
+              aria-expanded={!sidebarCollapsed}
             >
               {sidebarCollapsed ? (
                 <PanelLeftOpen className="h-4.5 w-4.5 text-blue-600" />

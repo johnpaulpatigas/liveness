@@ -95,7 +95,10 @@ export default function ResetPassword({ modal = false }) {
             <Lock className="h-6 w-6 text-white" />
           </div>
           <div>
-            <h2 className="text-xl font-black tracking-tight text-slate-900">
+            <h2
+              id="reset-modal-title"
+              className="text-xl font-black tracking-tight text-slate-900"
+            >
               Reset Password
             </h2>
             <p className="text-xs font-medium text-slate-500">
@@ -125,7 +128,7 @@ export default function ResetPassword({ modal = false }) {
       </div>
 
       {success ? (
-        <div className="space-y-6 text-center">
+        <div role="status" className="space-y-6 text-center">
           <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-emerald-50 text-emerald-600">
             <CheckCircle2 className="h-8 w-8" />
           </div>
@@ -149,7 +152,10 @@ export default function ResetPassword({ modal = false }) {
       ) : (
         <form className="space-y-5" onSubmit={handleSubmit}>
           {error && (
-            <div className="animate-shake rounded-2xl border border-red-100 bg-red-50 px-4 py-3 text-sm font-semibold text-red-600">
+            <div
+              role="alert"
+              className="animate-shake rounded-2xl border border-red-100 bg-red-50 px-4 py-3 text-sm font-semibold text-red-600"
+            >
               {error}
             </div>
           )}
@@ -172,6 +178,7 @@ export default function ResetPassword({ modal = false }) {
                 required
                 autoFocus
                 value={newPassword}
+                aria-invalid={Boolean(error)}
                 onChange={(e) => setNewPassword(e.target.value)}
                 className="block w-full rounded-xl border border-slate-200 bg-slate-50/50 py-3 pr-4 pl-10 text-sm font-medium text-slate-900 placeholder-slate-400 transition-all focus:border-blue-500 focus:bg-white focus:ring-4 focus:ring-blue-500/10 focus:outline-none"
                 placeholder="••••••••"
@@ -196,6 +203,7 @@ export default function ResetPassword({ modal = false }) {
                 type="password"
                 required
                 value={confirmPassword}
+                aria-invalid={Boolean(error)}
                 onChange={(e) => setConfirmPassword(e.target.value)}
                 className="block w-full rounded-xl border border-slate-200 bg-slate-50/50 py-3 pr-4 pl-10 text-sm font-medium text-slate-900 placeholder-slate-400 transition-all focus:border-blue-500 focus:bg-white focus:ring-4 focus:ring-blue-500/10 focus:outline-none"
                 placeholder="••••••••"
@@ -222,7 +230,12 @@ export default function ResetPassword({ modal = false }) {
           className="absolute inset-0 bg-slate-900/60 backdrop-blur-sm"
           onClick={handleClose}
         />
-        <div className="animate-in zoom-in-95 relative w-full max-w-md duration-200">
+        <div
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="reset-modal-title"
+          className="animate-in zoom-in-95 relative w-full max-w-md duration-200"
+        >
           <div className="rounded-3xl border border-slate-100 bg-white p-7 shadow-2xl">
             {formContent}
           </div>

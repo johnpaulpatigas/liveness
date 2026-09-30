@@ -130,6 +130,7 @@ const Navbar = () => {
           onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
           className="cursor-pointer rounded-xl border border-slate-200 p-2 text-slate-600 hover:bg-slate-50 md:hidden"
           aria-label="Toggle navigation menu"
+          aria-expanded={mobileMenuOpen}
         >
           {mobileMenuOpen ? (
             <X className="h-6 w-6" />

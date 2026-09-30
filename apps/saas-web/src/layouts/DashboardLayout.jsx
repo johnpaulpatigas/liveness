@@ -126,7 +126,7 @@ export default function DashboardLayout({ children }) {
       />
 
       {/* Main Content Area */}
-      <main className="relative z-10 min-w-0 flex-1 overflow-y-auto">
+      <main id="main-content" className="relative z-10 min-w-0 flex-1 overflow-y-auto">
         {/* Header */}
         <header className="sticky top-0 z-10 flex h-16 items-center justify-between border-b border-slate-100 bg-white/80 px-4 backdrop-blur-md sm:px-6 md:h-20 md:px-8">
           {/* Left: Mobile Brand Logo & Desktop Breadcrumbs */}
@@ -169,6 +169,7 @@ export default function DashboardLayout({ children }) {
                 onClick={() => setProfileDropdownOpen((prev) => !prev)}
                 className="group flex cursor-pointer items-center justify-center gap-2 rounded-full border border-slate-200/80 bg-white p-1.5 pr-3 shadow-xs transition-all hover:border-slate-300"
                 aria-label="Profile menu"
+                aria-expanded={profileDropdownOpen}
               >
                 <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-blue-600 text-xs font-bold text-white shadow-sm">
                   {initials}
@@ -229,6 +230,7 @@ export default function DashboardLayout({ children }) {
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
               className="flex h-9 w-9 cursor-pointer items-center justify-center rounded-xl border border-slate-200 bg-white p-2 text-slate-600 shadow-2xs transition-colors hover:bg-slate-100 md:hidden"
               aria-label="Toggle navigation menu"
+              aria-expanded={mobileMenuOpen}
             >
               {mobileMenuOpen ? (
                 <X className="h-5 w-5" />
@@ -282,7 +284,12 @@ export default function DashboardLayout({ children }) {
                 setSearchQuery("");
               }}
             />
-            <div className="animate-in zoom-in-95 relative z-10 w-full max-w-xl overflow-hidden rounded-2xl border border-slate-100 bg-white shadow-2xl duration-150">
+            <div
+              role="dialog"
+              aria-modal="true"
+              aria-label="Quick search"
+              className="animate-in zoom-in-95 relative z-10 w-full max-w-xl overflow-hidden rounded-2xl border border-slate-100 bg-white shadow-2xl duration-150"
+            >
               {/* Modal Search Header Input */}
               <div className="flex items-center border-b border-slate-100 px-4 py-3.5">
                 <Search className="mr-3 h-5 w-5 shrink-0 text-blue-600" />
@@ -298,6 +305,7 @@ export default function DashboardLayout({ children }) {
                   }}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   placeholder="Search pages, documentation, or users..."
+                  aria-label="Search pages, documentation, or users"
                   className="w-full text-sm font-bold text-slate-900 placeholder:text-slate-400 focus:outline-none"
                 />
                 {searchQuery && (

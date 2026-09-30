@@ -173,7 +173,10 @@ export default function Signup({ modal = false }) {
             <ShieldCheck className="h-5 w-5 text-white" />
           </div>
           <div>
-            <h2 className="text-xl font-extrabold tracking-tight text-slate-900">
+            <h2
+              id="signup-modal-title"
+              className="text-xl font-extrabold tracking-tight text-slate-900"
+            >
               Create an Account
             </h2>
             <p className="text-xs font-medium text-slate-500">
@@ -196,7 +199,10 @@ export default function Signup({ modal = false }) {
       <form className="space-y-3.5" onSubmit={handleSubmit}>
         {/* Top Error Banner */}
         {!hasFieldErrors && error && (
-          <div className="flex items-start gap-2.5 rounded-lg border border-red-200 bg-red-50 p-3 text-xs text-red-700 shadow-2xs">
+          <div
+            role="alert"
+            className="flex items-start gap-2.5 rounded-lg border border-red-200 bg-red-50 p-3 text-xs text-red-700 shadow-2xs"
+          >
             <AlertCircle className="mt-0.5 h-4 w-4 shrink-0 text-red-600" />
             <div>
               <p className="mb-0.5 font-bold text-red-800">
@@ -222,6 +228,10 @@ export default function Signup({ modal = false }) {
                 required
                 value={formData.firstName}
                 onChange={handleChange}
+                aria-invalid={Boolean(fieldErrors.firstName)}
+                aria-describedby={
+                  fieldErrors.firstName ? "firstName-error" : undefined
+                }
                 className={`${getInputClass("firstName")} pl-3.5`}
                 placeholder="Jane"
               />
@@ -232,7 +242,11 @@ export default function Signup({ modal = false }) {
               )}
             </div>
             {fieldErrors.firstName && (
-              <p className="mt-1 ml-1 text-xs font-medium text-red-600">
+              <p
+                id="firstName-error"
+                role="alert"
+                className="mt-1 ml-1 text-xs font-medium text-red-600"
+              >
                 {fieldErrors.firstName}
               </p>
             )}
@@ -251,6 +265,10 @@ export default function Signup({ modal = false }) {
                 required
                 value={formData.lastName}
                 onChange={handleChange}
+                aria-invalid={Boolean(fieldErrors.lastName)}
+                aria-describedby={
+                  fieldErrors.lastName ? "lastName-error" : undefined
+                }
                 className={`${getInputClass("lastName")} pl-3.5`}
                 placeholder="Doe"
               />
@@ -261,7 +279,11 @@ export default function Signup({ modal = false }) {
               )}
             </div>
             {fieldErrors.lastName && (
-              <p className="mt-1 ml-1 text-xs font-medium text-red-600">
+              <p
+                id="lastName-error"
+                role="alert"
+                className="mt-1 ml-1 text-xs font-medium text-red-600"
+              >
                 {fieldErrors.lastName}
               </p>
             )}
@@ -289,6 +311,10 @@ export default function Signup({ modal = false }) {
               required
               value={formData.username}
               onChange={handleChange}
+              aria-invalid={Boolean(fieldErrors.username)}
+              aria-describedby={
+                fieldErrors.username ? "username-error" : undefined
+              }
               className={`${getInputClass("username")} pl-9`}
               placeholder="janedoe"
             />
@@ -299,7 +325,11 @@ export default function Signup({ modal = false }) {
             )}
           </div>
           {fieldErrors.username && (
-            <p className="mt-1 ml-1 text-xs font-medium text-red-600">
+            <p
+              id="username-error"
+              role="alert"
+              className="mt-1 ml-1 text-xs font-medium text-red-600"
+            >
               {fieldErrors.username}
             </p>
           )}
@@ -326,6 +356,8 @@ export default function Signup({ modal = false }) {
               required
               value={formData.email}
               onChange={handleChange}
+              aria-invalid={Boolean(fieldErrors.email)}
+              aria-describedby={fieldErrors.email ? "email-error" : undefined}
               className={`${getInputClass("email")} pl-9`}
               placeholder="jane@example.com"
             />
@@ -336,7 +368,11 @@ export default function Signup({ modal = false }) {
             )}
           </div>
           {fieldErrors.email && (
-            <p className="mt-1 ml-1 text-xs font-medium text-red-600">
+            <p
+              id="email-error"
+              role="alert"
+              className="mt-1 ml-1 text-xs font-medium text-red-600"
+            >
               {fieldErrors.email}
             </p>
           )}
@@ -364,6 +400,10 @@ export default function Signup({ modal = false }) {
                 required
                 value={formData.password}
                 onChange={handleChange}
+                aria-invalid={Boolean(fieldErrors.password)}
+                aria-describedby={
+                  fieldErrors.password ? "password-error" : undefined
+                }
                 className={`${getInputClass("password")} pl-9`}
                 placeholder="••••••••"
               />
@@ -371,7 +411,7 @@ export default function Signup({ modal = false }) {
                 type="button"
                 onClick={() => setShowPassword((v) => !v)}
                 className="absolute inset-y-0 right-0 flex cursor-pointer items-center pr-3 text-slate-400 hover:text-slate-600"
-                tabIndex={-1}
+                aria-label={showPassword ? "Hide password" : "Show password"}
               >
                 {showPassword ? (
                   <EyeOff className="h-4 w-4" />
@@ -381,7 +421,11 @@ export default function Signup({ modal = false }) {
               </button>
             </div>
             {fieldErrors.password && (
-              <p className="mt-1 ml-1 text-xs font-medium text-red-600">
+              <p
+                id="password-error"
+                role="alert"
+                className="mt-1 ml-1 text-xs font-medium text-red-600"
+              >
                 {fieldErrors.password}
               </p>
             )}
@@ -409,6 +453,12 @@ export default function Signup({ modal = false }) {
                 required
                 value={formData.confirmPassword}
                 onChange={handleChange}
+                aria-invalid={Boolean(fieldErrors.confirmPassword)}
+                aria-describedby={
+                  fieldErrors.confirmPassword
+                    ? "confirmPassword-error"
+                    : undefined
+                }
                 className={`${getInputClass("confirmPassword")} pl-9`}
                 placeholder="••••••••"
               />
@@ -416,7 +466,11 @@ export default function Signup({ modal = false }) {
                 type="button"
                 onClick={() => setShowConfirm((v) => !v)}
                 className="absolute inset-y-0 right-0 flex cursor-pointer items-center pr-3 text-slate-400 hover:text-slate-600"
-                tabIndex={-1}
+                aria-label={
+                  showConfirm
+                    ? "Hide confirm password"
+                    : "Show confirm password"
+                }
               >
                 {showConfirm ? (
                   <EyeOff className="h-4 w-4" />
@@ -426,7 +480,11 @@ export default function Signup({ modal = false }) {
               </button>
             </div>
             {fieldErrors.confirmPassword && (
-              <p className="mt-1 ml-1 text-xs font-medium text-red-600">
+              <p
+                id="confirmPassword-error"
+                role="alert"
+                className="mt-1 ml-1 text-xs font-medium text-red-600"
+              >
                 {fieldErrors.confirmPassword}
               </p>
             )}
@@ -488,7 +546,12 @@ export default function Signup({ modal = false }) {
           onClick={handleClose}
         />
         {/* Modal Card */}
-        <div className="animate-in zoom-in-95 relative w-full max-w-lg duration-200">
+        <div
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="signup-modal-title"
+          className="animate-in zoom-in-95 relative w-full max-w-lg duration-200"
+        >
           <div className="rounded-2xl border border-slate-100 bg-white p-6 shadow-2xl sm:p-7">
             {formContent}
           </div>

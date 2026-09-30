@@ -82,6 +82,7 @@ export default function Landing() {
                 onClick={copyToClipboard}
                 className="flex w-21 shrink-0 cursor-pointer items-center justify-center space-x-1.5 rounded-lg border border-slate-800 bg-slate-900 py-1.5 text-xs font-semibold text-slate-400 transition-all hover:border-slate-700 hover:bg-slate-800 hover:text-white"
                 title="Copy package installation command"
+                aria-label="Copy package installation command"
               >
                 {copied ? (
                   <>
@@ -462,6 +463,9 @@ const FAQSection = () => {
                 className="overflow-hidden rounded-2xl border border-slate-200/80 bg-white transition-all"
               >
                 <button
+                  id={`faq-question-${index}`}
+                  aria-expanded={isOpen}
+                  aria-controls={`faq-answer-${index}`}
                   onClick={() => toggleFaq(index)}
                   className="flex w-full cursor-pointer items-center justify-between p-5 text-left font-bold text-slate-900 transition-colors hover:text-blue-600 sm:p-6"
                 >
@@ -469,13 +473,19 @@ const FAQSection = () => {
                     {faq.question}
                   </span>
                   <ChevronDown
+                    aria-hidden="true"
                     className={`h-5 w-5 shrink-0 text-slate-400 transition-transform duration-200 ${
                       isOpen ? "rotate-180 text-blue-600" : ""
                     }`}
                   />
                 </button>
                 {isOpen && (
-                  <div className="border-t border-slate-100 px-5 pt-0 pb-6 text-sm leading-relaxed text-slate-600 sm:px-6 sm:pb-6 sm:text-base">
+                  <div
+                    id={`faq-answer-${index}`}
+                    role="region"
+                    aria-labelledby={`faq-question-${index}`}
+                    className="border-t border-slate-100 px-5 pt-0 pb-6 text-sm leading-relaxed text-slate-600 sm:px-6 sm:pb-6 sm:text-base"
+                  >
                     <p className="pt-4">{faq.answer}</p>
                   </div>
                 )}
@@ -640,10 +650,16 @@ const HowItWorksInteractive = () => {
               </div>
 
               {/* Quick Step Switcher Tabs */}
-              <div className="flex items-center space-x-1 rounded-lg border border-slate-800 bg-slate-950 p-1">
+              <div
+                role="tablist"
+                aria-label="Integration steps"
+                className="flex items-center space-x-1 rounded-lg border border-slate-800 bg-slate-950 p-1"
+              >
                 {STEPS_DATA.map((step, idx) => (
                   <button
                     key={step.id}
+                    role="tab"
+                    aria-selected={idx === activeStepIndex}
                     onClick={() => {
                       setActiveStepIndex(idx);
                       setStepCopied(false);
@@ -664,6 +680,7 @@ const HowItWorksInteractive = () => {
                 onClick={() => handleCopyCode(activeStepData.code)}
                 className="flex w-21 shrink-0 cursor-pointer items-center justify-center space-x-1.5 rounded-lg border border-slate-800 bg-slate-900 py-1.5 text-xs font-semibold text-slate-400 transition-all hover:border-slate-700 hover:bg-slate-800 hover:text-white"
                 title="Copy code snippet"
+                aria-label="Copy code snippet"
               >
                 {stepCopied ? (
                   <>
