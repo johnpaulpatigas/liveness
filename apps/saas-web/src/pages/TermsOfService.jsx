@@ -31,7 +31,7 @@ export default function TermsOfService() {
             <h1 className="text-2xl font-extrabold tracking-tight text-slate-900 sm:text-4xl">
               Terms of service
             </h1>
-            <p className="mt-2 text-xs text-slate-400 sm:text-sm">
+            <p className="mt-2 text-xs text-slate-500 sm:text-sm">
               Last updated: September 16, 2026
             </p>
           </div>
@@ -190,7 +190,7 @@ export default function TermsOfService() {
           </div>
         </article>
 
-        <footer className="mt-8 text-center text-xs font-medium text-slate-400">
+        <footer className="mt-8 text-center text-xs font-medium text-slate-600">
           &copy; {new Date().getFullYear()} Liveness Cloud Platform. All rights
           reserved.
         </footer>

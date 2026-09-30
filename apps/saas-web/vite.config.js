@@ -6,6 +6,9 @@ import { defineConfig } from "vite";
 export default defineConfig({
   plugins: [react(), tailwindcss()],
   base: process.env.VITE_BASE_PATH || "./",
+  build: {
+    sourcemap: true,
+  },
   optimizeDeps: {
     include: ["@mediapipe/face_mesh", "@tensorflow/tfjs"],
   },

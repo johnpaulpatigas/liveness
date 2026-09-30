@@ -1,20 +1,29 @@
-import { useEffect, useState } from "react";
+import { Suspense, lazy, useEffect, useState } from "react";
 import { Link, Navigate, Route, Routes, useLocation } from "react-router-dom";
 import DashboardLayout from "./layouts/DashboardLayout";
-import ApiKeys from "./pages/ApiKeys";
-import Dashboard from "./pages/Dashboard";
-import Documentation from "./pages/Documentation";
-import ForgotPassword from "./pages/ForgotPassword";
 import Landing from "./pages/Landing";
-import Login from "./pages/Login";
-import Logs from "./pages/Logs";
-import PrivacyPolicy from "./pages/PrivacyPolicy";
-import ResetPassword from "./pages/ResetPassword";
-import Settings from "./pages/Settings";
-import Signup from "./pages/Signup";
-import TermsOfService from "./pages/TermsOfService";
-import Users from "./pages/Users";
 import { api } from "./services/api";
+
+const ApiKeys = lazy(() => import("./pages/ApiKeys"));
+const Dashboard = lazy(() => import("./pages/Dashboard"));
+const Documentation = lazy(() => import("./pages/Documentation"));
+const ForgotPassword = lazy(() => import("./pages/ForgotPassword"));
+const Login = lazy(() => import("./pages/Login"));
+const Logs = lazy(() => import("./pages/Logs"));
+const PrivacyPolicy = lazy(() => import("./pages/PrivacyPolicy"));
+const ResetPassword = lazy(() => import("./pages/ResetPassword"));
+const Settings = lazy(() => import("./pages/Settings"));
+const Signup = lazy(() => import("./pages/Signup"));
+const TermsOfService = lazy(() => import("./pages/TermsOfService"));
+const Users = lazy(() => import("./pages/Users"));
+
+function PageLoadingFallback() {
+  return (
+    <div className="flex min-h-screen items-center justify-center bg-white">
+      <div className="h-8 w-8 animate-spin rounded-full border-4 border-blue-600 border-t-transparent" />
+    </div>
+  );
+}
 
 function useCurrentUser() {
   const [user, setUser] = useState(() => api.auth.getCurrentUser());
@@ -74,14 +83,14 @@ function PublicOnlyRoute({ children }) {
 function NotFound() {
   const user = useCurrentUser();
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center bg-gradient-to-br from-slate-50 to-white px-4 text-center">
+    <main className="flex min-h-screen flex-col items-center justify-center bg-gradient-to-br from-slate-50 to-white px-4 text-center">
       <div className="mb-6 flex h-24 w-24 items-center justify-center rounded-3xl bg-slate-100">
         <span className="text-5xl font-black text-slate-300">404</span>
       </div>
       <h1 className="text-3xl font-black tracking-tight text-slate-900">
         Page not found
       </h1>
-      <p className="mt-3 text-sm font-medium text-slate-500">
+      <p className="mt-3 text-sm font-medium text-slate-600">
         The page you're looking for doesn't exist or has been moved.
       </p>
       <Link
@@ -90,7 +99,7 @@ function NotFound() {
       >
         {user ? "Go to Dashboard" : "Back to Home"}
       </Link>
-    </div>
+    </main>
   );
 }
 
@@ -128,101 +137,19 @@ function App() {
 
   return (
     <>
-      <Routes location={backgroundLocation || location}>
-        <Route
-          path="/"
-          element={user ? <Navigate to="/dashboard" replace /> : <Landing />}
-        />
+      <Suspense fallback={<PageLoadingFallback />}>
+        <Routes location={backgroundLocation || location}>
+          <Route
+            path="/"
+            element={user ? <Navigate to="/dashboard" replace /> : <Landing />}
+          />
 
-        {/* These still work as standalone full-page routes when accessed directly via URL */}
-        <Route
-          path="/login"
-          element={
-            <PublicOnlyRoute>
-              <Login />
-            </PublicOnlyRoute>
-          }
-        />
-        <Route
-          path="/signup"
-          element={
-            <PublicOnlyRoute>
-              <Signup />
-            </PublicOnlyRoute>
-          }
-        />
-        <Route
-          path="/forgot-password"
-          element={
-            <PublicOnlyRoute>
-              <ForgotPassword />
-            </PublicOnlyRoute>
-          }
-        />
-        <Route
-          path="/reset-password"
-          element={
-            <PublicOnlyRoute>
-              <ResetPassword />
-            </PublicOnlyRoute>
-          }
-        />
-
-        <Route path="/docs" element={<Documentation />} />
-        <Route path="/privacy" element={<PrivacyPolicy />} />
-        <Route path="/terms" element={<TermsOfService />} />
-
-        <Route
-          path="/dashboard"
-          element={
-            <ProtectedRoute>
-              <Dashboard />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/users"
-          element={
-            <ProtectedRoute>
-              <Users />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/logs"
-          element={
-            <ProtectedRoute>
-              <Logs />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/api-keys"
-          element={
-            <ProtectedRoute>
-              <ApiKeys />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/settings"
-          element={
-            <ProtectedRoute>
-              <Settings />
-            </ProtectedRoute>
-          }
-        />
-        <Route path="*" element={<NotFound />} />
-      </Routes>
-
-      {/* Modal routes: rendered on top of the background location */}
-      {backgroundLocation && (
-        <Routes>
+          {/* These still work as standalone full-page routes when accessed directly via URL */}
           <Route
             path="/login"
             element={
               <PublicOnlyRoute>
-                <Login modal />
+                <Login />
               </PublicOnlyRoute>
             }
           />
@@ -230,7 +157,7 @@ function App() {
             path="/signup"
             element={
               <PublicOnlyRoute>
-                <Signup modal />
+                <Signup />
               </PublicOnlyRoute>
             }
           />
@@ -238,7 +165,7 @@ function App() {
             path="/forgot-password"
             element={
               <PublicOnlyRoute>
-                <ForgotPassword modal />
+                <ForgotPassword />
               </PublicOnlyRoute>
             }
           />
@@ -246,11 +173,97 @@ function App() {
             path="/reset-password"
             element={
               <PublicOnlyRoute>
-                <ResetPassword modal />
+                <ResetPassword />
               </PublicOnlyRoute>
             }
           />
+
+          <Route path="/docs" element={<Documentation />} />
+          <Route path="/privacy" element={<PrivacyPolicy />} />
+          <Route path="/terms" element={<TermsOfService />} />
+
+          <Route
+            path="/dashboard"
+            element={
+              <ProtectedRoute>
+                <Dashboard />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/users"
+            element={
+              <ProtectedRoute>
+                <Users />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/logs"
+            element={
+              <ProtectedRoute>
+                <Logs />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/api-keys"
+            element={
+              <ProtectedRoute>
+                <ApiKeys />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/settings"
+            element={
+              <ProtectedRoute>
+                <Settings />
+              </ProtectedRoute>
+            }
+          />
+          <Route path="*" element={<NotFound />} />
         </Routes>
+      </Suspense>
+
+      {/* Modal routes: rendered on top of the background location */}
+      {backgroundLocation && (
+        <Suspense fallback={null}>
+          <Routes>
+            <Route
+              path="/login"
+              element={
+                <PublicOnlyRoute>
+                  <Login modal />
+                </PublicOnlyRoute>
+              }
+            />
+            <Route
+              path="/signup"
+              element={
+                <PublicOnlyRoute>
+                  <Signup modal />
+                </PublicOnlyRoute>
+              }
+            />
+            <Route
+              path="/forgot-password"
+              element={
+                <PublicOnlyRoute>
+                  <ForgotPassword modal />
+                </PublicOnlyRoute>
+              }
+            />
+            <Route
+              path="/reset-password"
+              element={
+                <PublicOnlyRoute>
+                  <ResetPassword modal />
+                </PublicOnlyRoute>
+              }
+            />
+          </Routes>
+        </Suspense>
       )}
     </>
   );

@@ -156,9 +156,9 @@ export default function ApiKeys() {
                     <Key className="h-5 w-5" />
                   </div>
                   <div>
-                    <h3 className="text-base font-extrabold text-slate-900">
+                    <h2 className="text-base font-extrabold text-slate-900">
                       Issue New API Key
-                    </h3>
+                    </h2>
                     <p className="text-xs font-medium text-slate-500">
                       Generate secret credentials for your application
                     </p>
@@ -251,7 +251,7 @@ export default function ApiKeys() {
           <div className="overflow-x-auto">
             <table className="w-full min-w-150 text-left text-sm">
               <thead>
-                <tr className="border-b border-slate-100 bg-slate-50/50 text-[10px] font-bold tracking-wider text-slate-400 uppercase">
+                <tr className="border-b border-slate-100 bg-slate-50/50 text-[10px] font-bold tracking-wider text-slate-500 uppercase">
                   <th className="px-6 py-3.5">Key Identifier</th>
                   <th className="px-6 py-3.5">Cryptographic Key</th>
                   <th className="px-6 py-3.5">Issued Date</th>
@@ -307,7 +307,7 @@ export default function ApiKeys() {
                         <div className="mb-3 flex h-10 w-10 items-center justify-center rounded-lg border border-slate-200/60 bg-slate-50">
                           <Key className="h-5 w-5 text-slate-300" />
                         </div>
-                        <p className="text-xs font-extrabold tracking-widest text-slate-400 uppercase">
+                        <p className="text-xs font-extrabold tracking-widest text-slate-500 uppercase">
                           No active API keys issued
                         </p>
                         <button
@@ -335,9 +335,9 @@ export default function ApiKeys() {
           <AlertCircle className="h-4 w-4" />
         </div>
         <div>
-          <h4 className="text-xs font-extrabold text-amber-900">
+          <p className="text-xs font-extrabold text-amber-900">
             Security Best Practices
-          </h4>
+          </p>
           <p className="mt-0.5 text-xs leading-relaxed font-medium text-amber-800/80">
             Do not commit secret keys to public repositories or expose client
             secret headers in public codebases. Store keys in secure environment
@@ -359,9 +359,9 @@ export default function ApiKeys() {
                 <Key className="h-5 w-5" />
               </div>
 
-              <h3 className="text-lg font-bold text-slate-900">
+              <h2 className="text-lg font-bold text-slate-900">
                 API Key Generated Successfully
-              </h3>
+              </h2>
               <p className="mt-1 text-xs font-medium text-slate-500">
                 Your key for{" "}
                 <strong className="text-slate-800">{showKeyModal.name}</strong>{" "}
@@ -426,9 +426,9 @@ export default function ApiKeys() {
                     <AlertTriangle className="h-5 w-5" />
                   </div>
                   <div>
-                    <h3 className="text-base font-extrabold text-slate-900">
+                    <h2 className="text-base font-extrabold text-slate-900">
                       Revoke API Key
-                    </h3>
+                    </h2>
                     <p className="text-xs font-medium text-slate-500">
                       This action requires typed verification
                     </p>

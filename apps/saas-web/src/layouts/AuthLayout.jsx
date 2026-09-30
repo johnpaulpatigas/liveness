@@ -39,7 +39,7 @@ export default function AuthLayout({ children }) {
         {children}
       </main>
 
-      <footer className="border-t border-slate-100 bg-white py-6 text-center text-xs font-medium text-slate-400">
+      <footer className="border-t border-slate-100 bg-white py-6 text-center text-xs font-medium text-slate-600">
         &copy; {new Date().getFullYear()} Liveness Cloud. All rights reserved.
       </footer>
     </div>

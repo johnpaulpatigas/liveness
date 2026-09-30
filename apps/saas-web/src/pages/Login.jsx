@@ -93,7 +93,7 @@ export default function Login({ modal = false }) {
             <h2 className="text-xl font-extrabold tracking-tight text-slate-900">
               Welcome Back
             </h2>
-            <p className="text-xs font-medium text-slate-400">
+            <p className="text-xs font-medium text-slate-500">
               Sign in to your console
             </p>
           </div>
@@ -102,7 +102,7 @@ export default function Login({ modal = false }) {
           <button
             type="button"
             onClick={handleClose}
-            className="cursor-pointer rounded-lg p-1.5 text-slate-400 transition-colors hover:bg-slate-100 hover:text-slate-700"
+            className="cursor-pointer rounded-lg p-1.5 text-slate-500 transition-colors hover:bg-slate-100 hover:text-slate-700"
             aria-label="Close"
           >
             <X className="h-5 w-5" />
@@ -245,7 +245,7 @@ export default function Login({ modal = false }) {
       <div className="mt-6">
         <div className="relative flex items-center justify-center">
           <div className="flex-1 border-t border-slate-100" />
-          <span className="mx-4 text-xs font-medium text-slate-400">
+          <span className="mx-4 text-xs font-medium text-slate-500">
             New to Liveness Cloud?
           </span>
           <div className="flex-1 border-t border-slate-100" />

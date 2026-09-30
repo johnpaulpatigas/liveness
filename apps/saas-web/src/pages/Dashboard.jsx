@@ -315,9 +315,9 @@ export default function Dashboard() {
               <p className="text-xs font-semibold text-slate-500">
                 {card.label}
               </p>
-              <h3 className="mt-2 text-2xl font-bold tracking-tight text-slate-900 sm:text-3xl">
+              <p className="mt-2 text-2xl font-bold tracking-tight text-slate-900 sm:text-3xl">
                 {card.value}
-              </h3>
+              </p>
               <p className="mt-1 text-xs text-slate-500">{card.description}</p>
             </div>
           ))}
@@ -330,10 +330,10 @@ export default function Dashboard() {
         <div className="rounded-xl border border-slate-200/80 bg-white p-5 shadow-xs lg:col-span-2">
           <div className="flex flex-col gap-3 border-b border-slate-100 pb-4 sm:flex-row sm:items-center sm:justify-between">
             <div>
-              <h3 className="flex items-center gap-2 text-sm font-bold text-slate-900">
+              <h2 className="flex items-center gap-2 text-sm font-bold text-slate-900">
                 <BarChart3 className="h-4 w-4 text-blue-600" />
                 Verification Activity
-              </h3>
+              </h2>
               <p className="mt-0.5 text-xs text-slate-500">
                 Daily challenge runs across the last {timeRange} days (
                 {totalInTimeline} total: {passedInTimeline} passed,{" "}
@@ -499,10 +499,10 @@ export default function Dashboard() {
         <div className="flex flex-col justify-between rounded-xl border border-slate-200/80 bg-white p-5 shadow-xs">
           <div>
             <div className="mb-4 border-b border-slate-100 pb-3.5">
-              <h3 className="flex items-center gap-2 text-sm font-bold text-slate-900">
+              <h2 className="flex items-center gap-2 text-sm font-bold text-slate-900">
                 <ShieldCheck className="h-4 w-4 text-blue-600" />
                 Verification Performance
-              </h3>
+              </h2>
               <p className="mt-0.5 text-xs text-slate-500">
                 Pass vs. reject accuracy on active challenges
               </p>
@@ -621,9 +621,9 @@ export default function Dashboard() {
           <div className="overflow-hidden rounded-xl border border-slate-200/80 bg-white shadow-xs">
             <div className="flex items-center justify-between border-b border-slate-100 px-5 py-4">
               <div>
-                <h3 className="text-sm font-bold text-slate-900">
+                <h2 className="text-sm font-bold text-slate-900">
                   Recent Verifications
-                </h3>
+                </h2>
                 <p className="text-xs text-slate-500">
                   Live feed of incoming verification and enrollment requests
                 </p>
@@ -676,7 +676,7 @@ export default function Dashboard() {
               <div className="overflow-x-auto">
                 <table className="w-full text-left text-sm">
                   <thead>
-                    <tr className="border-b border-slate-100 bg-slate-50/60 text-[10px] font-bold tracking-wider text-slate-400 uppercase">
+                    <tr className="border-b border-slate-100 bg-slate-50/60 text-[10px] font-bold tracking-wider text-slate-500 uppercase">
                       <th className="px-5 py-3">Result</th>
                       <th className="px-5 py-3">Subject</th>
                       <th className="px-5 py-3">API Key</th>
@@ -757,9 +757,9 @@ export default function Dashboard() {
         <div className="space-y-6 lg:col-span-1">
           {/* Console Shortcuts */}
           <div className="rounded-xl border border-slate-200/80 bg-white p-5 shadow-xs">
-            <h3 className="mb-3.5 text-sm font-bold text-slate-900">
+            <h2 className="mb-3.5 text-sm font-bold text-slate-900">
               Console Shortcuts
-            </h3>
+            </h2>
             <div className="divide-y divide-slate-100">
               {shortcuts.map((action) => (
                 <Link
@@ -789,11 +789,11 @@ export default function Dashboard() {
           {/* System Status */}
           <div className="rounded-xl border border-slate-200/80 bg-white p-5 shadow-xs">
             <div className="mb-4 flex items-center justify-between border-b border-slate-100 pb-3">
-              <h3 className="flex items-center gap-2 text-sm font-bold text-slate-900">
+              <h2 className="flex items-center gap-2 text-sm font-bold text-slate-900">
                 <Server className="h-4 w-4 text-blue-600" />
                 System Status
-              </h3>
-              <span className="font-mono text-[11px] font-semibold text-slate-400">
+              </h2>
+              <span className="font-mono text-[11px] font-semibold text-slate-500">
                 {import.meta.env.MODE.toUpperCase()}
               </span>
             </div>

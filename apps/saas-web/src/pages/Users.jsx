@@ -120,7 +120,7 @@ export default function Users() {
           <div className="overflow-x-auto">
             <table className="w-full min-w-[600px] text-left text-sm">
               <thead>
-                <tr className="border-b border-slate-100 bg-slate-50/50 text-[10px] font-bold tracking-wider text-slate-400 uppercase">
+                <tr className="border-b border-slate-100 bg-slate-50/50 text-[10px] font-bold tracking-wider text-slate-500 uppercase">
                   <th className="px-6 py-3.5">Enrolled Subject</th>
                   <th className="px-6 py-3.5">Identity ID</th>
                   <th className="px-6 py-3.5">Origin API Key</th>
@@ -207,7 +207,7 @@ export default function Users() {
                     <td colSpan="5" className="px-6 py-14 text-center">
                       <div className="flex flex-col items-center">
                         <User className="mb-3 h-8 w-8 text-slate-300" />
-                        <p className="text-xs font-extrabold tracking-widest text-slate-400 uppercase">
+                        <p className="text-xs font-extrabold tracking-widest text-slate-500 uppercase">
                           No enrolled identities found
                         </p>
                       </div>
@@ -241,9 +241,9 @@ export default function Users() {
                     </div>
                     <div>
                       <div className="flex items-center gap-2">
-                        <h3 className="text-base font-black tracking-tight text-slate-900">
+                        <h2 className="text-base font-black tracking-tight text-slate-900">
                           Delete Identity Profile
-                        </h3>
+                        </h2>
                         <span className="rounded-full bg-rose-100 px-2 py-0.5 text-[9px] font-black text-rose-700 uppercase">
                           Destructive
                         </span>

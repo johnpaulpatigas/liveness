@@ -219,11 +219,11 @@ export default function Settings() {
                     "AD"}
                 </div>
                 <div className="min-w-0 flex-1">
-                  <h3 className="truncate text-base font-extrabold text-slate-900">
+                  <p className="truncate text-base font-extrabold text-slate-900">
                     {user
                       ? `${user.firstName} ${user.lastName}`
                       : "Administrator"}
-                  </h3>
+                  </p>
                   <p className="truncate font-mono text-xs font-semibold text-slate-500">
                     @{user?.username || "admin"}
                   </p>
@@ -369,10 +369,10 @@ export default function Settings() {
           {/* Security Status Card */}
           <div className="space-y-6 lg:col-span-4">
             <div className="rounded-2xl border border-slate-200/80 bg-white p-6 shadow-2xs">
-              <h3 className="mb-4 flex items-center gap-2 text-xs font-extrabold tracking-wider text-slate-400 uppercase">
+              <p className="mb-4 flex items-center gap-2 text-xs font-extrabold tracking-wider text-slate-600 uppercase">
                 <ShieldCheck className="h-4 w-4 text-blue-600" />
                 Security Overview
-              </h3>
+              </p>
 
               <div className="space-y-3">
                 <div className="flex items-center justify-between rounded-xl border border-slate-100 bg-slate-50/70 p-3 text-xs">

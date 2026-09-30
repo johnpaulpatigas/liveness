@@ -98,7 +98,7 @@ export default function ResetPassword({ modal = false }) {
             <h2 className="text-xl font-black tracking-tight text-slate-900">
               Reset Password
             </h2>
-            <p className="text-xs font-medium text-slate-400">
+            <p className="text-xs font-medium text-slate-500">
               Set a new secure password
             </p>
           </div>
@@ -107,7 +107,7 @@ export default function ResetPassword({ modal = false }) {
           <button
             type="button"
             onClick={handleClose}
-            className="cursor-pointer rounded-xl p-1.5 text-slate-400 transition-colors hover:bg-slate-100 hover:text-slate-700"
+            className="cursor-pointer rounded-xl p-1.5 text-slate-500 transition-colors hover:bg-slate-100 hover:text-slate-700"
             aria-label="Close"
           >
             <X className="h-5 w-5" />

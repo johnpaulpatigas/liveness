@@ -239,7 +239,7 @@ export default function Logs() {
           <div className="overflow-x-auto">
             <table className="w-full min-w-[650px] text-left text-sm">
               <thead>
-                <tr className="border-b border-slate-100 bg-slate-50/50 text-[10px] font-bold tracking-wider text-slate-400 uppercase">
+                <tr className="border-b border-slate-100 bg-slate-50/50 text-[10px] font-bold tracking-wider text-slate-500 uppercase">
                   <th className="px-6 py-3.5">Result</th>
                   <th className="px-6 py-3.5">Subject</th>
                   <th className="px-6 py-3.5">API Key</th>
@@ -332,7 +332,7 @@ export default function Logs() {
                     <td colSpan="5" className="px-6 py-14 text-center">
                       <div className="flex flex-col items-center">
                         <AlertCircle className="mb-3 h-8 w-8 text-slate-300" />
-                        <p className="text-xs font-extrabold tracking-widest text-slate-400 uppercase">
+                        <p className="text-xs font-extrabold tracking-widest text-slate-500 uppercase">
                           No audit telemetry logs found
                         </p>
                       </div>
@@ -361,17 +361,17 @@ export default function Logs() {
                     <Activity className="h-5 w-5" />
                   </div>
                   <div>
-                    <h3 className="text-base font-extrabold text-slate-900">
+                    <h2 className="text-base font-extrabold text-slate-900">
                       Telemetry Session Detail
-                    </h3>
-                    <p className="font-mono text-xs font-medium text-slate-400">
+                    </h2>
+                    <p className="font-mono text-xs font-medium text-slate-500">
                       ID: {selectedLog.id}
                     </p>
                   </div>
                 </div>
                 <button
                   onClick={() => setSelectedLog(null)}
-                  className="flex h-8 w-8 cursor-pointer items-center justify-center rounded-lg bg-slate-100 text-slate-400 transition-colors hover:bg-slate-200 hover:text-slate-700"
+                  className="flex h-8 w-8 cursor-pointer items-center justify-center rounded-lg bg-slate-100 text-slate-500 transition-colors hover:bg-slate-200 hover:text-slate-700"
                   aria-label="Close modal"
                 >
                   <X className="h-4 w-4" />

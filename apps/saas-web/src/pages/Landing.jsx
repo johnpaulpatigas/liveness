@@ -42,7 +42,8 @@ export default function Landing() {
       {/* Navigation Header */}
       <Navbar />
 
-      {/* Hero Section */}
+      <main id="main-content">
+        {/* Hero Section */}
       <section className="bg-linear-to-b from-slate-50 to-white px-4 py-20 sm:px-6 md:px-12 md:pt-24 md:pb-28">
         <div className="mx-auto max-w-5xl text-center">
           <h1 className="mb-6 text-4xl leading-tight font-extrabold tracking-tight text-slate-900 sm:text-5xl md:text-6xl">
@@ -247,6 +248,7 @@ export default function Landing() {
 
       {/* FAQ Section */}
       <FAQSection />
+      </main>
 
       {/* Enterprise Footer */}
       <footer className="border-t border-slate-200/80 bg-slate-50/70 px-4 py-14 sm:py-16 md:px-12">
@@ -282,9 +284,9 @@ export default function Landing() {
 
             {/* Column 2: Product */}
             <div>
-              <h4 className="mb-4 text-xs font-bold tracking-wider text-slate-900 uppercase">
+              <p className="mb-4 text-xs font-bold tracking-wider text-slate-900 uppercase">
                 Product
-              </h4>
+              </p>
               <ul className="space-y-2.5 text-xs font-medium text-slate-600">
                 <li>
                   <a
@@ -317,9 +319,9 @@ export default function Landing() {
 
             {/* Column 3: Developer & Resources */}
             <div>
-              <h4 className="mb-4 text-xs font-bold tracking-wider text-slate-900 uppercase">
+              <p className="mb-4 text-xs font-bold tracking-wider text-slate-900 uppercase">
                 Developers
-              </h4>
+              </p>
               <ul className="space-y-2.5 text-xs font-medium text-slate-600">
                 <li>
                   <Link
@@ -359,9 +361,9 @@ export default function Landing() {
 
             {/* Column 4: Security & Compliance */}
             <div>
-              <h4 className="mb-4 text-xs font-bold tracking-wider text-slate-900 uppercase">
+              <p className="mb-4 text-xs font-bold tracking-wider text-slate-900 uppercase">
                 Trust & Security
-              </h4>
+              </p>
               <p className="text-xs leading-relaxed text-slate-500">
                 Camera feeds stay on the device. Descriptors are processed in
                 memory and scored without storing raw images.
@@ -369,7 +371,7 @@ export default function Landing() {
             </div>
           </div>
 
-          <div className="flex flex-col items-center justify-between gap-4 border-t border-slate-200/80 pt-8 text-xs font-medium text-slate-400 sm:flex-row">
+          <div className="flex flex-col items-center justify-between gap-4 border-t border-slate-200/80 pt-8 text-xs font-medium text-slate-600 sm:flex-row">
             <p>
               &copy; {new Date().getFullYear()} Liveness Cloud, Inc. All rights
               reserved.
@@ -377,19 +379,19 @@ export default function Landing() {
             <div className="flex items-center space-x-6">
               <Link
                 to="/privacy"
-                className="transition-colors hover:text-slate-600"
+                className="transition-colors hover:text-slate-900"
               >
                 Privacy Policy
               </Link>
               <Link
                 to="/terms"
-                className="transition-colors hover:text-slate-600"
+                className="transition-colors hover:text-slate-900"
               >
                 Terms of Service
               </Link>
               <Link
                 to="/docs"
-                className="transition-colors hover:text-slate-600"
+                className="transition-colors hover:text-slate-900"
               >
                 Documentation
               </Link>
@@ -604,7 +606,7 @@ const HowItWorksInteractive = () => {
                   >
                     {step.step}
                   </span>
-                  <span className="font-mono text-[10px] font-medium text-slate-400 sm:text-xs">
+                  <span className="font-mono text-[10px] font-semibold text-slate-600 sm:text-xs">
                     {step.tag}
                   </span>
                 </div>

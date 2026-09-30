@@ -176,7 +176,7 @@ export default function Signup({ modal = false }) {
             <h2 className="text-xl font-extrabold tracking-tight text-slate-900">
               Create an Account
             </h2>
-            <p className="text-xs font-medium text-slate-400">
+            <p className="text-xs font-medium text-slate-500">
               Get started with your free 1,000 checks
             </p>
           </div>
@@ -185,7 +185,7 @@ export default function Signup({ modal = false }) {
           <button
             type="button"
             onClick={handleClose}
-            className="cursor-pointer rounded-lg p-1.5 text-slate-400 transition-colors hover:bg-slate-100 hover:text-slate-700"
+            className="cursor-pointer rounded-lg p-1.5 text-slate-500 transition-colors hover:bg-slate-100 hover:text-slate-700"
             aria-label="Close"
           >
             <X className="h-5 w-5" />
@@ -441,7 +441,7 @@ export default function Signup({ modal = false }) {
           {loading ? "Creating account..." : "Create account"}
         </button>
 
-        <p className="mt-3 text-center text-[11px] leading-relaxed text-slate-400">
+        <p className="mt-3 text-center text-[11px] leading-relaxed text-slate-500">
           By creating an account, you agree to our{" "}
           <Link
             to="/terms"

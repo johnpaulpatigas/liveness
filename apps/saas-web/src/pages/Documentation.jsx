@@ -1172,28 +1172,28 @@ node scripts/setup-agent-skills.js --agent=windsurf,copilot`}
 
         <div className="space-y-3">
           <div className="rounded-xl border border-slate-200/80 bg-white p-4">
-            <div className="text-xs font-bold text-slate-400 uppercase">Prompt 1: React verification modal</div>
+            <div className="text-xs font-bold text-slate-500 uppercase">Prompt 1: React verification modal</div>
             <p className="mt-1 font-mono text-xs text-slate-800">
               "Add a liveness verification modal to our React registration flow using @liveness/sdk and Tailwind CSS. Ensure camera tracks are stopped when the modal closes."
             </p>
           </div>
 
           <div className="rounded-xl border border-slate-200/80 bg-white p-4">
-            <div className="text-xs font-bold text-slate-400 uppercase">Prompt 2: Next.js verification route</div>
+            <div className="text-xs font-bold text-slate-500 uppercase">Prompt 2: Next.js verification route</div>
             <p className="mt-1 font-mono text-xs text-slate-800">
               "Create a Next.js App Router API route to verify the biometric descriptor with Liveness Cloud. Check the SHA-256 integrity hash before forwarding the request."
             </p>
           </div>
 
           <div className="rounded-xl border border-slate-200/80 bg-white p-4">
-            <div className="text-xs font-bold text-slate-400 uppercase">Prompt 3: Model asset deployment</div>
+            <div className="text-xs font-bold text-slate-500 uppercase">Prompt 3: Model asset deployment</div>
             <p className="mt-1 font-mono text-xs text-slate-800">
               "Write a script to copy the MediaPipe and ResNet-34 model files to our Vite public directory and configure basePath in the SDK."
             </p>
           </div>
 
           <div className="rounded-xl border border-slate-200/80 bg-white p-4">
-            <div className="text-xs font-bold text-slate-400 uppercase">Prompt 4: Mobile Safari debugging</div>
+            <div className="text-xs font-bold text-slate-500 uppercase">Prompt 4: Mobile Safari debugging</div>
             <p className="mt-1 font-mono text-xs text-slate-800">
               "Diagnose why the webcam feed freezes on iOS Safari in our verification view and fix the video element attributes."
             </p>
@@ -1783,9 +1783,9 @@ const Documentation = () => {
     <>
       {menu.map((group, idx) => (
         <div key={idx} className="mb-6 last:mb-0">
-          <h5 className="mb-2.5 px-3 text-[10px] font-black tracking-widest text-slate-400 uppercase">
+          <p className="mb-2.5 px-3 text-[10px] font-black tracking-widest text-slate-500 uppercase">
             {group.title}
-          </h5>
+          </p>
           <ul className="space-y-1">
             {group.items.map((item) => (
               <SidebarItem
@@ -1822,7 +1822,7 @@ const Documentation = () => {
               <CurrentIcon className="h-4 w-4" />
             </div>
             <div className="flex min-w-0 flex-col text-left">
-              <span className="text-[10px] font-semibold tracking-wider text-slate-400 uppercase">
+              <span className="text-[10px] font-semibold tracking-wider text-slate-500 uppercase">
                 Topic
               </span>
               <span className="truncate text-sm font-bold text-slate-900">
@@ -1831,7 +1831,7 @@ const Documentation = () => {
             </div>
           </div>
           <ChevronDown
-            className={`h-4 w-4 text-slate-400 transition-transform duration-200 ${
+            className={`h-4 w-4 text-slate-500 transition-transform duration-200 ${
               topicDropdownOpen ? "rotate-180 text-blue-600" : ""
             }`}
           />
@@ -1841,7 +1841,7 @@ const Documentation = () => {
           <div className="animate-in fade-in zoom-in-95 absolute top-full right-0 left-0 z-40 mt-2 rounded-2xl border border-slate-200/80 bg-white p-3 shadow-xl duration-150">
             {menu.map((group, idx) => (
               <div key={idx} className="mb-3 last:mb-0">
-                <div className="mb-2 px-3 text-[11px] font-bold tracking-wider text-slate-400 uppercase">
+                <div className="mb-2 px-3 text-[11px] font-bold tracking-wider text-slate-500 uppercase">
                   {group.title}
                 </div>
                 <div className="space-y-1">
@@ -1917,7 +1917,7 @@ const Documentation = () => {
           </div>
         </div>
 
-        <footer className="mt-8 text-center text-xs font-medium text-slate-400">
+        <footer className="mt-8 text-center text-xs font-medium text-slate-600">
           &copy; {new Date().getFullYear()} Liveness Cloud Platform. All rights reserved.
         </footer>
       </div>
@@ -1929,9 +1929,9 @@ const Documentation = () => {
   ) : (
     <div className="min-h-screen bg-slate-50 font-sans text-slate-900 antialiased selection:bg-blue-100 selection:text-blue-900">
       <Navbar />
-      <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 md:px-12">
+      <main id="main-content" className="mx-auto max-w-7xl px-4 py-8 sm:px-6 md:px-12">
         {pageContent}
-      </div>
+      </main>
     </div>
   );
 };
