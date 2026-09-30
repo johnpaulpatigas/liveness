@@ -1,0 +1,25 @@
+{
+  "name": "Liveness Cloud | Biometric Identity Platform",
+  "short_name": "Liveness Cloud",
+  "description": "Client-side biometric facial verification and active liveness detection SDK and cloud platform.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#2563eb",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    },
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "maskable"
+    }
+  ],
+  "categories": ["developer", "security", "utilities"]
+}

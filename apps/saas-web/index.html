@@ -59,6 +59,104 @@
     <meta name="apple-mobile-web-app-title" content="Liveness Cloud" />
     <link rel="icon" type="image/svg+xml" href="./favicon.svg" />
     <link rel="apple-touch-icon" href="./favicon.svg" />
+    <link rel="manifest" href="./site.webmanifest" />
+
+    <!-- Schema.org JSON-LD Structured Data for Rich Snippets -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@graph": [
+          {
+            "@type": "WebSite",
+            "@id": "https://liveness.cloud/#website",
+            "url": "https://liveness.cloud/",
+            "name": "Liveness Cloud",
+            "description": "Biometric face verification and active liveness detection SDK and cloud platform.",
+            "publisher": {
+              "@id": "https://liveness.cloud/#organization"
+            }
+          },
+          {
+            "@type": "Organization",
+            "@id": "https://liveness.cloud/#organization",
+            "name": "Liveness Cloud",
+            "url": "https://liveness.cloud/",
+            "logo": {
+              "@type": "ImageObject",
+              "url": "https://liveness.cloud/favicon.svg"
+            },
+            "contactPoint": {
+              "@type": "ContactPoint",
+              "email": "support@liveness.cloud",
+              "contactType": "customer support"
+            }
+          },
+          {
+            "@type": "SoftwareApplication",
+            "@id": "https://liveness.cloud/#software",
+            "name": "Liveness SDK",
+            "operatingSystem": "All modern browsers (Chrome, Safari, Firefox, Edge, iOS Safari, Android Chrome)",
+            "applicationCategory": "DeveloperApplication",
+            "softwareVersion": "1.0.6",
+            "description": "Client-side biometric facial verification and active liveness detection developer platform powered by MediaPipe and TensorFlow.js.",
+            "offers": {
+              "@type": "Offer",
+              "price": "0",
+              "priceCurrency": "USD"
+            },
+            "publisher": {
+              "@id": "https://liveness.cloud/#organization"
+            }
+          },
+          {
+            "@type": "FAQPage",
+            "@id": "https://liveness.cloud/#faq",
+            "mainEntity": [
+              {
+                "@type": "Question",
+                "name": "How accurate is the liveness detection?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "The SDK tracks 468 facial landmarks to verify natural movement and head orientation, blocking static photos and screen replays."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "What browsers and devices are supported?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "The SDK runs in Chrome, Safari, Firefox, and Edge on iOS, Android, macOS, and Windows."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "Is user biometric data stored on your servers?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "Servers never receive camera images. The client extracts a 128-dimensional numerical vector, and matching runs without storing raw photos."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "How long does SDK integration take?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "Basic integration requires calling load() and start() on the video element, then posting the resulting descriptor to your verification endpoint."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "Is there a limit on API usage?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "API keys and verification requests have no usage caps or rate tiers."
+                }
+              }
+            ]
+          }
+        ]
+      }
+    </script>
 
     <!-- Backend API Early Connection -->
     <link rel="preconnect" href="https://api.liveness.cloud" crossorigin />
