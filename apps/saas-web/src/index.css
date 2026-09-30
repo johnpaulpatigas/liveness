@@ -23,6 +23,17 @@ button,
   cursor: pointer;
 }
 
+/* Defer off-screen rendering for mobile CPU & layout optimization */
+.content-visibility-auto {
+  content-visibility: auto;
+  contain-intrinsic-size: auto none auto 700px;
+}
+
+.content-visibility-footer {
+  content-visibility: auto;
+  contain-intrinsic-size: auto none auto 350px;
+}
+
 /* Code block syntax highlighting */
 .prism-code {
   color: #e2e8f0;

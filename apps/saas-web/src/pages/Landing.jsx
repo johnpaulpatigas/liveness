@@ -104,7 +104,7 @@ export default function Landing() {
       {/* Features Section */}
       <section
         id="features"
-        className="bg-white px-4 py-20 sm:px-6 md:px-12 md:py-24"
+        className="content-visibility-auto bg-white px-4 py-20 sm:px-6 md:px-12 md:py-24"
       >
         <div className="mx-auto max-w-6xl">
           <div className="mb-12 text-center md:mb-16">
@@ -230,7 +230,7 @@ export default function Landing() {
       {/* How It Works Section */}
       <section
         id="how-it-works"
-        className="border-y border-slate-200/60 bg-slate-50/80 px-4 py-20 sm:px-6 md:px-12 md:py-24"
+        className="content-visibility-auto border-y border-slate-200/60 bg-slate-50/80 px-4 py-20 sm:px-6 md:px-12 md:py-24"
       >
         <div className="mx-auto max-w-6xl">
           <div className="mb-12 text-center md:mb-16">
@@ -252,7 +252,7 @@ export default function Landing() {
       </main>
 
       {/* Enterprise Footer */}
-      <footer className="border-t border-slate-200/80 bg-slate-50/70 px-4 py-14 sm:py-16 md:px-12">
+      <footer className="content-visibility-footer border-t border-slate-200/80 bg-slate-50/70 px-4 py-14 sm:py-16 md:px-12">
         <div className="mx-auto max-w-6xl">
           <div className="mb-12 grid gap-10 sm:grid-cols-2 md:grid-cols-4 lg:gap-12">
             {/* Column 1: Brand & Status */}
@@ -442,7 +442,7 @@ const FAQSection = () => {
   return (
     <section
       id="faq"
-      className="border-t border-slate-200/60 bg-slate-50/80 px-4 py-20 sm:px-6 md:px-12 md:py-24"
+      className="content-visibility-auto border-t border-slate-200/60 bg-slate-50/80 px-4 py-20 sm:px-6 md:px-12 md:py-24"
     >
       <div className="mx-auto max-w-4xl">
         <div className="mb-12 text-center md:mb-16">

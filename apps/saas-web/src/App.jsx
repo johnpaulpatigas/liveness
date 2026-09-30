@@ -1,8 +1,9 @@
 import { Suspense, lazy, useEffect, useState } from "react";
 import { Link, Navigate, Route, Routes, useLocation } from "react-router-dom";
-import DashboardLayout from "./layouts/DashboardLayout";
 import Landing from "./pages/Landing";
 import { api } from "./services/api";
+
+const DashboardLayout = lazy(() => import("./layouts/DashboardLayout"));
 
 const ApiKeys = lazy(() => import("./pages/ApiKeys"));
 const Dashboard = lazy(() => import("./pages/Dashboard"));
