@@ -29,14 +29,35 @@ function euclideanDistance(p1, p2) {
   );
 }
 
-export function calculateEAR(landmarks, side) {
+export function calculateEAR(
+  landmarks,
+  side,
+  widthOrAspectRatio = 1.0,
+  height,
+) {
+  const aspectRatio =
+    height && height > 0
+      ? widthOrAspectRatio / height
+      : typeof widthOrAspectRatio === "number" && widthOrAspectRatio > 0
+        ? widthOrAspectRatio
+        : 1.0;
+
+  const scale = (pt) =>
+    aspectRatio === 1.0
+      ? pt
+      : {
+          x: pt.x * aspectRatio,
+          y: pt.y,
+          z: (pt.z || 0) * aspectRatio,
+        };
+
   const indices = EYE_INDICES[side];
-  const p1 = landmarks[indices[0]];
-  const p2 = landmarks[indices[1]];
-  const p3 = landmarks[indices[2]];
-  const p4 = landmarks[indices[3]];
-  const p5 = landmarks[indices[4]];
-  const p6 = landmarks[indices[5]];
+  const p1 = scale(landmarks[indices[0]]);
+  const p2 = scale(landmarks[indices[1]]);
+  const p3 = scale(landmarks[indices[2]]);
+  const p4 = scale(landmarks[indices[3]]);
+  const p5 = scale(landmarks[indices[4]]);
+  const p6 = scale(landmarks[indices[5]]);
 
   const verticalDist1 = euclideanDistance(p2, p6);
   const verticalDist2 = euclideanDistance(p3, p5);

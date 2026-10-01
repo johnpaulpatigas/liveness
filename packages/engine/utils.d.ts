@@ -7,6 +7,8 @@ export interface Landmark {
 export function calculateEAR(
   landmarks: Landmark[],
   side: "left" | "right",
+  widthOrAspectRatio?: number,
+  height?: number,
 ): number;
 export function calculateHeadTurnV2(landmarks: Landmark[]): number;
 export function calculateCosineSimilarity(

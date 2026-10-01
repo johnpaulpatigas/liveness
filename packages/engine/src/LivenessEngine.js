@@ -235,11 +235,18 @@ export class LivenessEngine {
         break;
       }
       case "BLINK": {
-        const leftEAR = calculateEAR(landmarks, "left");
-        const rightEAR = calculateEAR(landmarks, "right");
+        const videoW =
+          this.#videoElement?.videoWidth || this.#videoElement?.width || 640;
+        const videoH =
+          this.#videoElement?.videoHeight || this.#videoElement?.height || 480;
+        const leftEAR = calculateEAR(landmarks, "left", videoW, videoH);
+        const rightEAR = calculateEAR(landmarks, "right", videoW, videoH);
         rawValue = Math.min(leftEAR, rightEAR);
 
-        const OPEN_THRESHOLD = 0.3;
+        const OPEN_THRESHOLD = Math.min(
+          0.3,
+          Math.max(0.27, this.#config.blinkEARThreshold + 0.02),
+        );
 
         if (rawValue > OPEN_THRESHOLD) {
           this.#hasDetectedOpenEyes = true;
@@ -526,6 +533,16 @@ export class LivenessEngine {
     if (!this.#canvasCtx || !landmarksArray || landmarksArray.length === 0)
       return;
     const canvas = this.#canvasCtx.canvas;
+    const videoW = this.#videoElement?.videoWidth;
+    const videoH = this.#videoElement?.videoHeight;
+    if (
+      videoW &&
+      videoH &&
+      (canvas.width !== videoW || canvas.height !== videoH)
+    ) {
+      canvas.width = videoW;
+      canvas.height = videoH;
+    }
     this.#canvasCtx.clearRect(0, 0, canvas.width, canvas.height);
     const landmarks = landmarksArray[0];
     for (const [start, end] of FACEMESH_TESSELATION) {

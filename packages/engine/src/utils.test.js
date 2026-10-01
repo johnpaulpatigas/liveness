@@ -46,6 +46,49 @@ describe("Liveness Algorithms", () => {
       const ear = calculateEAR(landmarks, "left");
       expect(ear).toBeCloseTo(0.1);
     });
+
+    it("should calculate identical EAR for the same eye in landscape (1280x720) and mobile portrait (720x1280)", () => {
+      // Simulate real open eye of 50px width and 15px height (true EAR = 0.30)
+      const landLandmarks = Array(500).fill(p(0, 0, 0));
+      landLandmarks[362] = p(100 / 1280, 100 / 720);
+      landLandmarks[263] = p(150 / 1280, 100 / 720);
+      landLandmarks[385] = p(125 / 1280, 107.5 / 720);
+      landLandmarks[380] = p(125 / 1280, 92.5 / 720);
+      landLandmarks[387] = p(125 / 1280, 107.5 / 720);
+      landLandmarks[373] = p(125 / 1280, 92.5 / 720);
+
+      const portLandmarks = Array(500).fill(p(0, 0, 0));
+      portLandmarks[362] = p(100 / 720, 100 / 1280);
+      portLandmarks[263] = p(150 / 720, 100 / 1280);
+      portLandmarks[385] = p(125 / 720, 107.5 / 1280);
+      portLandmarks[380] = p(125 / 720, 92.5 / 1280);
+      portLandmarks[387] = p(125 / 720, 107.5 / 1280);
+      portLandmarks[373] = p(125 / 720, 92.5 / 1280);
+
+      const landscapeEAR = calculateEAR(landLandmarks, "left", 1280, 720);
+      const portraitEAR = calculateEAR(portLandmarks, "left", 720, 1280);
+
+      expect(landscapeEAR).toBeCloseTo(0.3);
+      expect(portraitEAR).toBeCloseTo(0.3);
+      expect(portraitEAR).toBeCloseTo(landscapeEAR);
+    });
+
+    it("should accept aspect ratio as single argument or as width and height", () => {
+      const landmarks = Array(500).fill(p(0, 0, 0));
+      landmarks[362] = p(100 / 720, 100 / 1280);
+      landmarks[263] = p(150 / 720, 100 / 1280);
+      landmarks[385] = p(125 / 720, 107.5 / 1280);
+      landmarks[380] = p(125 / 720, 92.5 / 1280);
+      landmarks[387] = p(125 / 720, 107.5 / 1280);
+      landmarks[373] = p(125 / 720, 92.5 / 1280);
+
+      const earWithDimensions = calculateEAR(landmarks, "left", 720, 1280);
+      const earWithRatio = calculateEAR(landmarks, "left", 720 / 1280);
+
+      expect(earWithDimensions).toBeCloseTo(0.3);
+      expect(earWithRatio).toBeCloseTo(0.3);
+      expect(earWithDimensions).toBeCloseTo(earWithRatio);
+    });
   });
 
   describe("calculateCosineSimilarity", () => {
