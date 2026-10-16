@@ -91,13 +91,24 @@ export class LivenessEngine {
       const modelUrl = `${cleanBasePath}/face_recognition`;
       this.#recognitionModel = new FaceRecognitionNet();
 
-      const faceMeshInitPromise =
-        typeof this.#faceMesh.initialize === "function"
-          ? this.#faceMesh.initialize()
-          : Promise.resolve();
+      const preloadFaceMeshAssets = async () => {
+        if (typeof window === "undefined" || typeof fetch !== "function") return;
+        const assets = [
+          `${cleanBasePath}/face_mesh/face_mesh_solution_packed_assets_loader.js`,
+          `${cleanBasePath}/face_mesh/face_mesh_solution_simd_wasm_bin.js`,
+          `${cleanBasePath}/face_mesh/face_mesh_solution_simd_wasm_bin.wasm`,
+          `${cleanBasePath}/face_mesh/face_mesh_solution_packed_assets.data`,
+          `${cleanBasePath}/face_mesh/face_mesh.binarypb`,
+        ];
+        await Promise.all(
+          assets.map((url) =>
+            fetch(url, { cache: "force-cache" }).catch(() => {})
+          )
+        );
+      };
 
       await Promise.all([
-        faceMeshInitPromise,
+        preloadFaceMeshAssets(),
         this.#recognitionModel.load(modelUrl),
       ]);
 
