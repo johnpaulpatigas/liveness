@@ -80,7 +80,7 @@ export function ApiSettings({ config, onSave }) {
                   </label>
                   <input
                     type="text"
-                    value={apiUrl}
+                    value={apiUrl ?? ""}
                     onChange={(e) => setApiUrl(e.target.value)}
                     placeholder="http://localhost:3000/api/liveness"
                     className="w-full rounded-lg border border-slate-300 px-3 py-2 font-mono text-xs focus:ring-2 focus:ring-blue-500 focus:outline-none"
@@ -92,7 +92,7 @@ export function ApiSettings({ config, onSave }) {
                   </label>
                   <input
                     type="password"
-                    value={apiKey}
+                    value={apiKey ?? ""}
                     onChange={(e) => setApiKey(e.target.value)}
                     placeholder="Enter your API Key"
                     className="w-full rounded-lg border border-slate-300 px-3 py-2 font-mono text-xs focus:ring-2 focus:ring-blue-500 focus:outline-none"

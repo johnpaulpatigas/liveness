@@ -43,7 +43,11 @@ export function LivenessChecker() {
   const [recentCloudUsers, setRecentCloudUsers] = useState(() => {
     const saved = localStorage.getItem("recent_cloud_identities");
     try {
-      return saved ? JSON.parse(saved) : [];
+      if (!saved) return [];
+      const parsed = JSON.parse(saved);
+      return Array.isArray(parsed)
+        ? parsed.filter((u) => u && typeof u === "object" && u.id)
+        : [];
     } catch {
       return [];
     }
@@ -223,7 +227,7 @@ export function LivenessChecker() {
             body = { name: userNameRef.current || "User", ...livenessResult };
           } else if (verifyTypeRef.current === VERIFY_TYPE.ONE_TO_ONE) {
             endpoint = `${baseUrl}/verify-one`;
-            const currentTargetId = targetIdRef.current.trim();
+            const currentTargetId = (targetIdRef.current || "").trim();
             if (!currentTargetId) {
               throw new Error(
                 "Target ID (UUID) is required for 1:1 verification.",
@@ -253,7 +257,7 @@ export function LivenessChecker() {
 
           const cloudResult = await response.json();
 
-          if (mode === MODE.ENROLL) {
+          if (modeRef.current === MODE.ENROLL) {
             const newCloudUser = {
               id: cloudResult.id,
               name: cloudResult.name,
@@ -304,7 +308,7 @@ export function LivenessChecker() {
         if (modeRef.current === MODE.ENROLL) {
           const newIdentity = {
             id: `local_${Date.now().toString(36)}`,
-            name: userNameRef.current.trim() || "User",
+            name: (userNameRef.current || "").trim() || "User",
             descriptor,
           };
 
@@ -540,11 +544,11 @@ export function LivenessChecker() {
   };
 
   const isStartDisabled =
-    (mode === MODE.ENROLL && !userName.trim()) ||
+    (mode === MODE.ENROLL && !userName?.trim()) ||
     (mode === MODE.VERIFY &&
       verifyType === VERIFY_TYPE.ONE_TO_ONE &&
       isCloudMode &&
-      !targetId.trim()) ||
+      !targetId?.trim()) ||
     (mode === MODE.VERIFY && !isCloudMode && enrolledUsers.length === 0);
 
   return (
@@ -779,7 +783,7 @@ export function LivenessChecker() {
               <input
                 type="text"
                 placeholder="e.g. John Doe"
-                value={userName}
+                value={userName ?? ""}
                 onChange={(e) => setUserName(e.target.value)}
                 className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:border-[#2f5bf5] focus:ring-2 focus:ring-[#2f5bf5]/20 focus:outline-none"
               />
@@ -844,20 +848,20 @@ export function LivenessChecker() {
                       <input
                         type="text"
                         placeholder="550e8400-e29b-41d4-a716-446655440000"
-                        value={targetId}
+                        value={targetId ?? ""}
                         onChange={(e) => setTargetId(e.target.value)}
                         className="w-full rounded-lg border border-slate-300 px-3 py-1.5 font-mono text-xs focus:border-[#2f5bf5] focus:outline-none"
                       />
                       {recentCloudUsers.length > 0 && (
                         <div className="mt-2 flex flex-wrap gap-1">
-                          {recentCloudUsers.map((u) => (
+                          {recentCloudUsers.map((u, i) => (
                             <button
-                              key={u.id}
+                              key={u.id || `cloud-btn-${i}`}
                               type="button"
-                              onClick={() => setTargetId(u.id)}
+                              onClick={() => setTargetId(u.id || "")}
                               className="cursor-pointer rounded bg-slate-100 px-2 py-0.5 font-mono text-[10px] text-slate-700 hover:bg-slate-200"
                             >
-                              {u.name}
+                              {u.name || "User"}
                             </button>
                           ))}
                         </div>
@@ -1013,9 +1017,9 @@ export function LivenessChecker() {
             </button>
           </div>
           <ul className="max-h-64 divide-y divide-slate-100 overflow-y-auto">
-            {recentCloudUsers.map((user) => (
+            {recentCloudUsers.map((user, idx) => (
               <li
-                key={user.id}
+                key={user.id || `cloud-user-${idx}`}
                 className="flex items-center justify-between px-6 py-3.5 transition-colors hover:bg-slate-50"
               >
                 <div className="flex items-center gap-3">
