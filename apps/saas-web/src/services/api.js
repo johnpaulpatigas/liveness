@@ -1,4 +1,11 @@
-const rawApiUrl = import.meta.env.VITE_API_URL || "http://localhost:3000/api";
+const defaultApiUrl =
+  typeof window !== "undefined" &&
+  (window.location.hostname === "liveness.cloud" ||
+    window.location.hostname === "www.liveness.cloud")
+    ? "https://api.liveness.cloud/api"
+    : "http://localhost:3000/api";
+
+const rawApiUrl = import.meta.env.VITE_API_URL || defaultApiUrl;
 const API_BASE_URL = rawApiUrl.replace(/\/+$/, "");
 
 let inMemoryUser = null;
