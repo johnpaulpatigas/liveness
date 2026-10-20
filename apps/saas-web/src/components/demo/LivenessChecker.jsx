@@ -87,13 +87,13 @@ export function LivenessChecker() {
         : {
             enabled: false,
             apiKey: "",
-            apiUrl: "http://localhost:3000/api/liveness",
+            apiUrl: "https://api.liveness.cloud/api/liveness",
           };
     } catch {
       return {
         enabled: false,
         apiKey: "",
-        apiUrl: "http://localhost:3000/api/liveness",
+        apiUrl: "https://api.liveness.cloud/api/liveness",
       };
     }
   });
@@ -217,7 +217,7 @@ export function LivenessChecker() {
 
           const rawUrl =
             apiConfigRef.current.apiUrl?.trim() ||
-            "http://localhost:3000/api/liveness";
+            "https://api.liveness.cloud/api/liveness";
           const baseUrl = rawUrl.replace(/\/+$/, "");
 
           let endpoint;
@@ -438,7 +438,7 @@ export function LivenessChecker() {
       try {
         const rawUrl =
           apiConfigRef.current.apiUrl?.trim() ||
-          "http://localhost:3000/api/liveness";
+          "https://api.liveness.cloud/api/liveness";
         const baseUrl = rawUrl.replace(/\/+$/, "");
         const apiKey = apiConfigRef.current.apiKey.trim();
 

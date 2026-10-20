@@ -5,7 +5,7 @@ export function ApiSettings({ config, onSave }) {
   const [enabled, setEnabled] = useState(config.enabled ?? !!config.apiKey);
   const [apiKey, setApiKey] = useState(config.apiKey || "");
   const [apiUrl, setApiUrl] = useState(
-    config.apiUrl || "http://localhost:3000/api/liveness",
+    config.apiUrl || "https://api.liveness.cloud/api/liveness",
   );
 
   const handleSave = () => {
@@ -82,7 +82,7 @@ export function ApiSettings({ config, onSave }) {
                     type="text"
                     value={apiUrl ?? ""}
                     onChange={(e) => setApiUrl(e.target.value)}
-                    placeholder="http://localhost:3000/api/liveness"
+                    placeholder="https://api.liveness.cloud/api/liveness"
                     className="w-full rounded-lg border border-slate-300 px-3 py-2 font-mono text-xs focus:ring-2 focus:ring-blue-500 focus:outline-none"
                   />
                 </div>
