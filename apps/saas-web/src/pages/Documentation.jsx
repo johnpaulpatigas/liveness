@@ -17,7 +17,7 @@ import DashboardLayout from "../layouts/DashboardLayout";
 const IntroContent = () => (
   <div>
     <div className="mb-6 inline-flex items-center rounded-sm border border-blue-100 bg-blue-50/80 px-2.5 py-1 font-mono text-xs font-semibold text-[#2f5bf5]">
-      <Book className="mr-2 h-3.5 w-3.5" /> Documentation v1.0.0
+      <Book className="mr-2 h-3.5 w-3.5" /> Documentation v1.0.9
     </div>
     <h1 className="font-heading mb-4 text-3xl font-bold tracking-tight text-slate-900 sm:text-5xl">
       Liveness SDK and cloud platform
@@ -218,7 +218,9 @@ const SDKUsageContent = () => (
           code={`import { LivenessSDK } from "@liveness/sdk";
 
 const sdk = new LivenessSDK({
-  basePath: "",              // Path prefix to /face_mesh and /face_recognition
+  // Load from jsDelivr CDN without bundling local models:
+  basePath: "https://cdn.jsdelivr.net/npm/@liveness/engine@1.0.9/assets",
+  // Or serve locally from your framework's public folder: basePath: "",
   challengeTimeout: 10000,   // Max time in ms per challenge
   headTurnThreshold: 0.4,    // Sensitivity for head rotation
   minBrightness: -0.8,       // Minimum tensor brightness (-1.0 to 1.0)
