@@ -23,6 +23,12 @@ export default defineConfig({
           ) {
             return "vendor-router";
           }
+          if (id.includes("node_modules/@tensorflow/")) {
+            return "vendor-tfjs";
+          }
+          if (id.includes("node_modules/@mediapipe/")) {
+            return "vendor-mediapipe";
+          }
         },
       },
     },
