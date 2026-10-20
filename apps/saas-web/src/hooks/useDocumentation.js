@@ -64,6 +64,9 @@ export function useDocumentation() {
 
   const handleTopicChange = (id) => {
     setActivePage(id);
+    if (typeof window !== "undefined" && window.history?.pushState) {
+      window.history.pushState(null, "", `#${id}`);
+    }
     scrollToTop();
   };
 
