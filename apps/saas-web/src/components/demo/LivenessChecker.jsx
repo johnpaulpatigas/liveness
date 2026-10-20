@@ -184,6 +184,7 @@ export function LivenessChecker() {
     setInstruction("Loading models, please wait...");
 
     const sdk = new LivenessSDK({
+      basePath: "https://cdn.jsdelivr.net/npm/@liveness/engine@1.0.9/assets",
       headTurnThreshold: 0.4,
       challengeTimeout: 10000,
     });
