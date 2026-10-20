@@ -1430,7 +1430,7 @@ const TroubleshootingContent = () => (
   default-src 'self';
   script-src 'self' 'unsafe-inline' 'wasm-unsafe-eval';
   worker-src 'self' blob:;
-  connect-src 'self' https://api.liveness.cloud https://cdn.example.com;
+  connect-src 'self' https://api.liveness.cloud https://cdn.jsdelivr.net;
   img-src 'self' data: blob:;`}
         />
       </div>
