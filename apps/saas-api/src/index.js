@@ -50,6 +50,10 @@ function isOriginAllowed(origin) {
   if (/^https:\/\/([a-zA-Z0-9-]+\.)?liveness\.cloud$/.test(normalized)) {
     return true;
   }
+  // Allow Vercel preview and production deployments (*.vercel.app)
+  if (/^https:\/\/([a-zA-Z0-9-]+\.)?vercel\.app$/.test(normalized)) {
+    return true;
+  }
   // Allow johnpaulpatigas.github.io
   if (normalized === "https://johnpaulpatigas.github.io") {
     return true;
