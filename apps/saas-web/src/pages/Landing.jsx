@@ -1,3 +1,4 @@
+import { Suspense, useEffect, lazy } from "react";
 import {
   Activity,
   ArrowRight,
@@ -21,6 +22,25 @@ export default function Landing() {
     scrollToTop,
     scrollToSection,
   } = useLanding();
+
+  // Idle preload model manifest so /demo page loads instantly
+  useEffect(() => {
+    if (typeof window !== "undefined" && typeof fetch === "function") {
+      const preload = () => {
+        fetch(
+          "https://cdn.jsdelivr.net/npm/@liveness/engine@1.0.9/assets/face_recognition/face_recognition_model-weights_manifest.json",
+          { cache: "force-cache" },
+        ).catch(() => {});
+      };
+      if ("requestIdleCallback" in window) {
+        const id = window.requestIdleCallback(preload);
+        return () => window.cancelIdleCallback(id);
+      } else {
+        const timer = setTimeout(preload, 2000);
+        return () => clearTimeout(timer);
+      }
+    }
+  }, []);
 
   return (
     <div className="min-h-screen bg-[#fafbfc] font-sans text-slate-900 selection:bg-[#2f5bf5] selection:text-white">
