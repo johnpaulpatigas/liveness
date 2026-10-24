@@ -39,5 +39,10 @@
     "@rollup/rollup-linux-arm64-gnu": "^4.54.0",
     "@rollup/rollup-linux-x64-gnu": "^4.54.0",
     "@rollup/rollup-win32-x64-msvc": "^4.54.0"
+  },
+  "allowScripts": {
+    "bcrypt@6.0.0": true,
+    "core-js": true,
+    "fsevents@2.3.3": true
   }
 }
