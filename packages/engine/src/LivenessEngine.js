@@ -1,6 +1,6 @@
-import * as mpFaceMesh from "@mediapipe/face_mesh";
 import * as tf from "@tensorflow/tfjs";
 import { FaceRecognitionNet } from "./FaceRecognitionNet";
+import { FaceMesh, FACEMESH_TESSELATION } from "./mediapipe-facemesh";
 import {
   calculateBrightness,
   calculateEAR,
@@ -9,16 +9,6 @@ import {
   checkOcclusion,
   generateIntegrityHash,
 } from "./utils";
-
-const FaceMesh =
-  mpFaceMesh.FaceMesh ||
-  mpFaceMesh.default?.FaceMesh ||
-  mpFaceMesh.default ||
-  (typeof window !== "undefined" ? window.FaceMesh : undefined);
-const FACEMESH_TESSELATION =
-  mpFaceMesh.FACEMESH_TESSELATION ||
-  mpFaceMesh.default?.FACEMESH_TESSELATION ||
-  (typeof window !== "undefined" ? window.FACEMESH_TESSELATION : undefined);
 
 const DEFAULT_CONFIG = {
   blinkEARThreshold: 0.25,
