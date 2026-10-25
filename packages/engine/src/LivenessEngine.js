@@ -54,6 +54,8 @@ export class LivenessEngine {
   #lastLandmarks = null;
   #recordedDescriptor = null;
   #nextChallengeTimeoutId = null;
+  #turnThresholdCrossedTime = 0;
+  #cropCanvas = null;
 
   constructor(callbacks, config = {}) {
     if (
@@ -345,9 +347,16 @@ export class LivenessEngine {
         const turnRatio = calculateHeadTurnV2(landmarks);
         rawValue = turnRatio;
         if (turnRatio > this.#config.headTurnThreshold) {
-          challengePassed = true;
+          if (!this.#turnThresholdCrossedTime) {
+            this.#turnThresholdCrossedTime = Date.now();
+          }
           progress = 1;
+          // Require head turn to be sustained for at least 80ms to reject single-frame replay glitches
+          if (Date.now() - this.#turnThresholdCrossedTime >= 80) {
+            challengePassed = true;
+          }
         } else {
+          this.#turnThresholdCrossedTime = 0;
           progress = Math.max(0, turnRatio / this.#config.headTurnThreshold);
         }
         break;
@@ -356,9 +365,16 @@ export class LivenessEngine {
         const turnRatio = calculateHeadTurnV2(landmarks);
         rawValue = turnRatio;
         if (turnRatio < -this.#config.headTurnThreshold) {
-          challengePassed = true;
+          if (!this.#turnThresholdCrossedTime) {
+            this.#turnThresholdCrossedTime = Date.now();
+          }
           progress = 1;
+          // Require head turn to be sustained for at least 80ms to reject single-frame replay glitches
+          if (Date.now() - this.#turnThresholdCrossedTime >= 80) {
+            challengePassed = true;
+          }
         } else {
+          this.#turnThresholdCrossedTime = 0;
           progress = Math.max(0, turnRatio / -this.#config.headTurnThreshold);
         }
         break;
@@ -395,6 +411,7 @@ export class LivenessEngine {
     if (this.#isStopped) return;
     this.#currentChallengeIndex++;
     this.#hasDetectedOpenEyes = false;
+    this.#turnThresholdCrossedTime = 0;
     if (this.#currentChallengeIndex >= this.#challenges.length) {
       this.#completeLiveness();
     } else {
