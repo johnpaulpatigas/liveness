@@ -1,9 +1,28 @@
 import { LivenessEngine } from "@liveness/engine";
 
 export class LivenessSDK {
+  #visibilityHandler = null;
+  #activeTracks = [];
+
+  static async getAvailableCameras() {
+    if (!navigator.mediaDevices?.enumerateDevices) {
+      return [];
+    }
+    try {
+      const devices = await navigator.mediaDevices.enumerateDevices();
+      return devices.filter((device) => device.kind === "videoinput");
+    } catch {
+      return [];
+    }
+  }
+
   constructor(config = {}) {
     this.config = config;
     this.engine = null;
+    this.videoElement = null;
+    this.canvasElement = null;
+    this.#visibilityHandler = null;
+    this.#activeTracks = [];
     this.listeners = {
       ready: [],
       challenge: [],
@@ -167,14 +186,20 @@ export class LivenessSDK {
 
         const idealWidth = isPortrait ? 720 : 1280;
         const idealHeight = isPortrait ? 1280 : 720;
+        const videoConstraints = {
+          width: { ideal: idealWidth },
+          height: { ideal: idealHeight },
+          aspectRatio: { ideal: idealWidth / idealHeight },
+        };
+
+        if (this.config.deviceId) {
+          videoConstraints.deviceId = { exact: this.config.deviceId };
+        } else {
+          videoConstraints.facingMode = "user";
+        }
 
         const stream = await navigator.mediaDevices.getUserMedia({
-          video: {
-            width: { ideal: idealWidth },
-            height: { ideal: idealHeight },
-            aspectRatio: { ideal: idealWidth / idealHeight },
-            facingMode: "user",
-          },
+          video: videoConstraints,
           audio: false,
         });
         videoElement.srcObject = stream;
@@ -199,11 +224,42 @@ export class LivenessSDK {
         await videoElement.play();
       }
 
+      // Track hardware disconnections on active tracks
+      if (videoElement.srcObject) {
+        const tracks = videoElement.srcObject.getVideoTracks?.() || [];
+        this.#activeTracks = tracks;
+        tracks.forEach((track) => {
+          track.onended = () => {
+            const errorPayload = {
+              code: "CAMERA_DISCONNECTED",
+              message:
+                "Camera hardware track was disconnected or ended unexpectedly.",
+            };
+            this._emit("error", errorPayload);
+            this._emit("failure", errorPayload);
+          };
+        });
+      }
+
+      // Handle background tab visibility change
+      if (typeof document !== "undefined" && !this.#visibilityHandler) {
+        this.#visibilityHandler = () => {
+          if (document.hidden) {
+            this.engine?.stop();
+          } else if (this.videoElement && !this.videoElement.paused) {
+            const ctx = canvasElement.getContext("2d");
+            this.engine?.start(this.videoElement, ctx);
+          }
+        };
+        document.addEventListener("visibilitychange", this.#visibilityHandler);
+      }
+
       canvasElement.width = videoElement.videoWidth || 1280;
       canvasElement.height = videoElement.videoHeight || 720;
       const ctx = canvasElement.getContext("2d");
 
       this.videoElement = videoElement;
+      this.canvasElement = canvasElement;
       this.engine.start(videoElement, ctx);
     } catch (error) {
       let errorPayload = {
@@ -239,14 +295,23 @@ export class LivenessSDK {
     if (this.engine) {
       this.engine.stop();
     }
+    if (typeof document !== "undefined" && this.#visibilityHandler) {
+      document.removeEventListener("visibilitychange", this.#visibilityHandler);
+      this.#visibilityHandler = null;
+    }
     const targetVideo = videoElement || this.videoElement;
     if (targetVideo && targetVideo.srcObject) {
-      targetVideo.srcObject.getTracks().forEach((track) => track.stop());
+      targetVideo.srcObject.getTracks().forEach((track) => {
+        track.onended = null;
+        track.stop();
+      });
       targetVideo.srcObject = null;
     }
+    this.#activeTracks = [];
     if (targetVideo === this.videoElement) {
       this.videoElement = null;
     }
+    this.canvasElement = null;
   }
 
   destroy(videoElement) {

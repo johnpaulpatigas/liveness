@@ -10,6 +10,7 @@ export interface LivenessConfig {
   maxBrightness?: number;
   sessionToken?: string;
   sessionSecret?: string;
+  deviceId?: string;
   challenges?: string[];
   instructions?: {
     WAITING?: string;
@@ -42,6 +43,7 @@ export type LivenessEvent =
   | "error";
 
 export class LivenessSDK {
+  static getAvailableCameras(): Promise<MediaDeviceInfo[]>;
   constructor(config?: LivenessConfig);
   on(event: "ready", callback: () => void): this;
   on(
