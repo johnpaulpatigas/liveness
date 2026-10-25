@@ -82,7 +82,7 @@ export class LivenessEngine {
         locateFile: (file) => `${cleanBasePath}/face_mesh/${file}`,
       });
       this.#faceMesh.setOptions({
-        maxNumFaces: 1,
+        maxNumFaces: 2,
         refineLandmarks: true,
         minDetectionConfidence: 0.5,
         minTrackingConfidence: 0.5,
@@ -271,6 +271,15 @@ export class LivenessEngine {
           message: "Could not detect a face.",
         });
       }
+      return;
+    }
+
+    if (faces.length > 1) {
+      this.#failChallenge({
+        code: "MULTIPLE_FACES_DETECTED",
+        message:
+          "Multiple faces detected. Please ensure only one person is in the frame.",
+      });
       return;
     }
     const landmarks = faces[0];

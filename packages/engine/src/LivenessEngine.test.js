@@ -234,4 +234,40 @@ describe("LivenessEngine Custom Challenges", () => {
       engine.stop();
     }
   });
+
+  it("should fail challenge if multiple faces are detected in frame", async () => {
+    const callbacks = {
+      onReady: vi.fn(),
+      onSuccess: vi.fn(),
+      onFailure: vi.fn(),
+      onChallengeChanged: vi.fn(),
+    };
+
+    const engine = new LivenessEngine(callbacks, {
+      challenges: ["WAITING"],
+    });
+
+    await engine.load();
+
+    const mockVideo = { readyState: 4, play: vi.fn().mockResolvedValue() };
+    const mockCanvasCtx = {
+      clearRect: vi.fn(),
+      canvas: { width: 640, height: 480 },
+    };
+
+    engine.start(mockVideo, mockCanvasCtx);
+
+    const face1 = Array(500).fill({ x: 0.5, y: 0.5, z: 0 });
+    const face2 = Array(500).fill({ x: 0.2, y: 0.2, z: 0 });
+
+    capturedOnResults({ multiFaceLandmarks: [face1, face2] });
+
+    expect(callbacks.onFailure).toHaveBeenCalledWith(
+      expect.objectContaining({
+        code: "MULTIPLE_FACES_DETECTED",
+      }),
+    );
+
+    engine.stop();
+  });
 });
