@@ -202,6 +202,7 @@ export class LivenessEngine {
     this.#canvasCtx = null;
     this.#lastLandmarks = null;
     this.#recordedDescriptor = null;
+    this.#cropCanvas = null;
     this.#isReady = false;
   }
 
@@ -605,17 +606,25 @@ export class LivenessEngine {
       const targetEyeDist = targetW * 0.38;
       const scale = targetEyeDist / Math.max(eyeDist, 1e-5);
 
-      // 5. In-memory canvas affine transformation
-      const canvas =
-        typeof OffscreenCanvas !== "undefined"
-          ? new OffscreenCanvas(targetW, targetH)
-          : document.createElement("canvas");
-      canvas.width = targetW;
-      canvas.height = targetH;
-      const ctx = canvas.getContext("2d");
+      // 5. In-memory canvas affine transformation with persistent canvas reuse
+      if (!this.#cropCanvas) {
+        this.#cropCanvas =
+          typeof OffscreenCanvas !== "undefined"
+            ? new OffscreenCanvas(targetW, targetH)
+            : typeof document !== "undefined"
+              ? document.createElement("canvas")
+              : null;
+      }
+      const canvas = this.#cropCanvas;
+      if (canvas && (canvas.width !== targetW || canvas.height !== targetH)) {
+        canvas.width = targetW;
+        canvas.height = targetH;
+      }
+      const ctx = canvas?.getContext("2d");
 
       if (ctx) {
         ctx.save();
+        ctx.clearRect(0, 0, targetW, targetH);
         ctx.translate(targetCenter.x, targetCenter.y);
         ctx.rotate(-angle);
         ctx.scale(scale, scale);
