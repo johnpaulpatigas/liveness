@@ -12,7 +12,7 @@ export interface LivenessCallbacks {
     challengeType: string,
     distanceHint?: "CLOSER" | "FURTHER" | null,
   ) => void;
-  onProgress?: (progress: number, rawValue: any) => void;
+  onProgress?: (progress: number, rawValue: number) => void;
 }
 
 export interface LivenessConfig {

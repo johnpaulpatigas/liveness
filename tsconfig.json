@@ -1,0 +1,25 @@
+{
+  "compilerOptions": {
+    "allowJs": true,
+    "checkJs": true,
+    "noEmit": true,
+    "target": "ESNext",
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "lib": ["DOM", "DOM.Iterable", "ESNext"],
+    "skipLibCheck": true,
+    "strict": false
+  },
+  "include": [
+    "packages/engine/src/**/*",
+    "packages/engine/index.d.ts",
+    "packages/engine/utils.d.ts",
+    "packages/sdk/src/**/*",
+    "packages/sdk/index.d.ts"
+  ],
+  "exclude": [
+    "node_modules",
+    "packages/engine/src/**/*.test.js",
+    "packages/sdk/dist"
+  ]
+}

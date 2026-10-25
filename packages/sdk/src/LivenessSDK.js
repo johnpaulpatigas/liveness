@@ -16,14 +16,8 @@ export class LivenessSDK {
     }
   }
 
-  constructor(config = {}) {
-    this.config = config;
-    this.engine = null;
-    this.videoElement = null;
-    this.canvasElement = null;
-    this.#visibilityHandler = null;
-    this.#activeTracks = [];
-    this.listeners = {
+  #initListeners() {
+    return {
       ready: [],
       challenge: [],
       progress: [],
@@ -31,6 +25,16 @@ export class LivenessSDK {
       failure: [],
       error: [],
     };
+  }
+
+  constructor(config = {}) {
+    this.config = config;
+    this.engine = null;
+    this.videoElement = null;
+    this.canvasElement = null;
+    this.#visibilityHandler = null;
+    this.#activeTracks = [];
+    this.listeners = this.#initListeners();
 
     this.instructions = {
       WAITING: "Please position your face in the center of the frame.",
@@ -320,6 +324,6 @@ export class LivenessSDK {
       this.engine.dispose();
       this.engine = null;
     }
-    this.listeners = {};
+    this.listeners = this.#initListeners();
   }
 }

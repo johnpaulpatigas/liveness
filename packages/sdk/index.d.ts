@@ -49,7 +49,7 @@ export interface ChallengePayload {
 
 export interface ProgressPayload {
   progress: number;
-  rawValue: any;
+  rawValue: number;
 }
 
 export interface LivenessEventMap {
