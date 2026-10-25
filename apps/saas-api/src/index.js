@@ -132,8 +132,7 @@ app.get(["/health", "/api/health"], async (req, res) => {
 });
 
 // Centralized error handler
-// eslint-disable-next-line no-unused-vars
-app.use((err, req, res, next) => {
+app.use((err, _req, res, _next) => {
   if (err.message === "Not allowed by CORS") {
     return res.status(403).json({ error: "Not allowed by CORS" });
   }

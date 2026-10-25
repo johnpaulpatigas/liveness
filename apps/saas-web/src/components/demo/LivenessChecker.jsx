@@ -420,7 +420,6 @@ export function LivenessChecker() {
 
     const currentVideo = videoRef.current;
     return () => sdkRef.current?.stop(currentVideo);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const handleStartClick = async () => {

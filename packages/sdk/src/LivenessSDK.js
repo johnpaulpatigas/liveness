@@ -2,7 +2,6 @@ import { LivenessEngine } from "@liveness/engine";
 
 export class LivenessSDK {
   #visibilityHandler = null;
-  #activeTracks = [];
 
   static async getAvailableCameras() {
     if (!navigator.mediaDevices?.enumerateDevices) {
@@ -33,7 +32,6 @@ export class LivenessSDK {
     this.videoElement = null;
     this.canvasElement = null;
     this.#visibilityHandler = null;
-    this.#activeTracks = [];
     this.listeners = this.#initListeners();
 
     this.instructions = {
@@ -231,7 +229,6 @@ export class LivenessSDK {
       // Track hardware disconnections on active tracks
       if (videoElement.srcObject) {
         const tracks = videoElement.srcObject.getVideoTracks?.() || [];
-        this.#activeTracks = tracks;
         tracks.forEach((track) => {
           track.onended = () => {
             const errorPayload = {
@@ -311,7 +308,6 @@ export class LivenessSDK {
       });
       targetVideo.srcObject = null;
     }
-    this.#activeTracks = [];
     if (targetVideo === this.videoElement) {
       this.videoElement = null;
     }

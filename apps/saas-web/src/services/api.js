@@ -144,7 +144,7 @@ export const api = {
         body: JSON.stringify({ otp }),
       });
       inMemoryUser = {
-        ...(inMemoryUser || {}),
+        ...inMemoryUser,
         ...updatedUser,
         emailVerified: true,
       };
@@ -178,7 +178,7 @@ export const api = {
         method: "PUT",
         body: JSON.stringify({ firstName, lastName }),
       });
-      inMemoryUser = { ...(inMemoryUser || {}), ...updatedUser };
+      inMemoryUser = { ...inMemoryUser, ...updatedUser };
       window.dispatchEvent(
         new CustomEvent("auth:login", { detail: inMemoryUser }),
       );

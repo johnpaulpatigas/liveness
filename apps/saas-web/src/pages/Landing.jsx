@@ -1,4 +1,4 @@
-import { Suspense, useEffect, lazy } from "react";
+import { useEffect } from "react";
 import {
   Activity,
   ArrowRight,

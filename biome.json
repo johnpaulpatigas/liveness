@@ -1,0 +1,64 @@
+{
+  "$schema": "https://biomejs.dev/schemas/2.6.3/schema.json",
+  "vcs": {
+    "enabled": true,
+    "clientKind": "git",
+    "useIgnoreFile": true
+  },
+  "files": {
+    "includes": [
+      "apps/**",
+      "packages/**",
+      "scripts/**",
+      "*.json",
+      "*.js",
+      "*.ts",
+      "*.md",
+      "!!**/dist",
+      "!!**/packages/engine/assets/**",
+      "!!plugins/**",
+      "!!apps/saas-api/src/db.js"
+    ]
+  },
+  "css": {
+    "parser": {
+      "tailwindDirectives": true
+    }
+  },
+  "formatter": {
+    "enabled": true,
+    "indentStyle": "space",
+    "indentWidth": 2,
+    "lineWidth": 80
+  },
+  "linter": {
+    "enabled": true,
+    "rules": {
+      "preset": "recommended",
+      "style": {
+        "useNodejsImportProtocol": "off"
+      },
+      "correctness": {
+        "noNodejsModules": "off",
+        "noProcessGlobal": "off",
+        "useQwikValidLexicalScope": "off"
+      },
+      "suspicious": {
+        "noArrayIndexKey": "off"
+      },
+      "security": {
+        "noDangerouslySetInnerHtml": "off"
+      },
+      "a11y": {
+        "preset": "none",
+        "useButtonType": "off",
+        "noStaticElementInteractions": "off"
+      }
+    }
+  },
+  "javascript": {
+    "formatter": {
+      "quoteStyle": "double"
+    }
+  }
+}

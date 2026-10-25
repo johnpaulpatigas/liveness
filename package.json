@@ -14,7 +14,9 @@
     "build": "npm run build -w packages/sdk && npm run build -w apps/saas-web",
     "build:saas": "npm run build -w packages/sdk && npm run build -w apps/saas-web",
     "build:sdk": "npm run build -w packages/sdk",
-    "lint": "eslint .",
+    "lint": "oxlint && biome lint --diagnostic-level=error",
+    "lint:oxlint": "oxlint",
+    "lint:biome": "biome lint --diagnostic-level=error",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "typecheck": "tsc --noEmit",
@@ -24,13 +26,9 @@
     "install:win-rollup": "node scripts/install-win-rollup.js"
   },
   "devDependencies": {
-    "@eslint/js": "^9.33.0",
+    "@biomejs/biome": "^2.6.3",
     "@tailwindcss/node": "^4.3.3",
-    "eslint": "^9.33.0",
-    "eslint-plugin-react-hooks": "^5.2.0",
-    "eslint-plugin-react-refresh": "^0.4.20",
-    "eslint-plugin-tailwind-canonical-classes": "^1.4.1",
-    "globals": "^16.3.0",
+    "oxlint": "^1.89.0",
     "prettier": "^3.8.1",
     "prettier-plugin-tailwindcss": "^0.7.2",
     "typescript": "^7.0.2"
