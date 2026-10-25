@@ -78,9 +78,17 @@ export function validateIntegrity(req, res, next) {
       .json({ error: "Session expired or clock out of sync" });
   }
 
-  // Verify server-orchestrated session if token was server-issued
+  // Enforce server-orchestrated session: every verification or enrollment request
+  // must present a valid, unexpired server-issued session token (prefixed with live_sess_).
+  if (!sessionToken.startsWith("live_sess_")) {
+    return res.status(400).json({
+      error:
+        "Invalid session token format. A server-issued verification session is required.",
+    });
+  }
+
   const serverSession = getSession(sessionToken);
-  if (sessionToken.startsWith("live_sess_") && !serverSession) {
+  if (!serverSession) {
     return res.status(400).json({
       error:
         "Verification session has expired or is invalid. Please request a new session.",
