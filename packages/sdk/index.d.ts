@@ -34,36 +34,45 @@ export interface LivenessError {
   message: string;
 }
 
-export type LivenessEvent =
-  | "ready"
-  | "challenge"
-  | "progress"
-  | "success"
-  | "failure"
-  | "error";
+export type ChallengeType =
+  | "WAITING"
+  | "BLINK"
+  | "TURN_LEFT"
+  | "TURN_RIGHT"
+  | "PROCESSING";
+
+export interface ChallengePayload {
+  type: ChallengeType;
+  instruction: string;
+  distance: "CLOSER" | "FURTHER" | null;
+}
+
+export interface ProgressPayload {
+  progress: number;
+  rawValue: any;
+}
+
+export interface LivenessEventMap {
+  ready: () => void;
+  challenge: (payload: ChallengePayload) => void;
+  progress: (payload: ProgressPayload) => void;
+  success: (result: LivenessResult) => void;
+  failure: (error: LivenessError) => void;
+  error: (error: LivenessError) => void;
+}
 
 export class LivenessSDK {
   static getAvailableCameras(): Promise<MediaDeviceInfo[]>;
   constructor(config?: LivenessConfig);
-  on(event: "ready", callback: () => void): this;
-  on(
-    event: "challenge",
-    callback: (payload: {
-      type: string;
-      instruction: string;
-      distance: "CLOSER" | "FURTHER" | null;
-    }) => void,
-  ): this;
-  on(
-    event: "progress",
-    callback: (payload: { progress: number; rawValue: any }) => void,
-  ): this;
-  on(event: "success", callback: (result: LivenessResult) => void): this;
-  on(
-    event: "failure" | "error",
-    callback: (error: LivenessError) => void,
+  on<K extends keyof LivenessEventMap>(
+    event: K,
+    callback: LivenessEventMap[K],
   ): this;
   on(event: string, callback: Function): this;
+  off<K extends keyof LivenessEventMap>(
+    event: K,
+    callback: LivenessEventMap[K],
+  ): this;
   off(event: string, callback: Function): this;
   load(): Promise<void>;
   updateConfig(config?: Partial<LivenessConfig>): this;
