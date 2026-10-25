@@ -642,6 +642,7 @@ const CloudUsageContent = () => (
               title="Response"
               code={`{
   "sessionToken": "live_sess_7f8a9b0c1d2e3f4a5b6c7d8e9f0a1b2c",
+  "sessionSecret": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
   "challenges": ["WAITING", "BLINK", "TURN_LEFT", "WAITING"],
   "expiresAt": 1716336300000
 }`}
@@ -751,6 +752,12 @@ const CloudUsageContent = () => (
           language="javascript"
           title="validateIntegrity.js"
           code={`import crypto from "crypto";
+
+function generateHmacSha256(descriptor, sessionToken, timestamp, secret) {
+  if (!secret) return null;
+  const data = JSON.stringify(descriptor) + sessionToken + timestamp;
+  return crypto.createHmac("sha256", secret).update(data).digest("hex");
+}
 
 function generateSha256Hash(descriptor, sessionToken, timestamp) {
   const data = JSON.stringify(descriptor) + sessionToken + timestamp;

@@ -29,6 +29,7 @@ const DEFAULT_CONFIG = {
   maxFaceSize: 0.6,
   basePath: "",
   sessionToken: null,
+  sessionSecret: null,
   minBrightness: -0.8,
   maxBrightness: 0.9,
   challenges: null,
@@ -501,10 +502,11 @@ export class LivenessEngine {
 
       const timestamp = Date.now();
       const sessionToken = this.#config.sessionToken || "local-session";
-      const integrity = generateIntegrityHash(
+      const integrity = await generateIntegrityHash(
         descriptorArray,
         sessionToken,
         timestamp,
+        this.#config.sessionSecret,
       );
 
       this.#callbacks.onSuccess({

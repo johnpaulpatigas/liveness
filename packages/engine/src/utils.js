@@ -138,8 +138,37 @@ export function checkOcclusion(landmarks) {
   return false;
 }
 
-export function generateIntegrityHash(descriptor, sessionToken, timestamp) {
+export async function generateIntegrityHash(
+  descriptor,
+  sessionToken,
+  timestamp,
+  sessionSecret = null,
+) {
   const data = JSON.stringify(descriptor) + sessionToken + timestamp;
+
+  if (sessionSecret && typeof crypto !== "undefined" && crypto.subtle) {
+    const enc = new TextEncoder();
+    const key = await crypto.subtle.importKey(
+      "raw",
+      enc.encode(sessionSecret),
+      { name: "HMAC", hash: "SHA-256" },
+      false,
+      ["sign"],
+    );
+    const signature = await crypto.subtle.sign("HMAC", key, enc.encode(data));
+    return Array.from(new Uint8Array(signature))
+      .map((b) => b.toString(16).padStart(2, "0"))
+      .join("");
+  }
+
+  if (typeof crypto !== "undefined" && crypto.subtle) {
+    const enc = new TextEncoder();
+    const hashBuffer = await crypto.subtle.digest("SHA-256", enc.encode(data));
+    return Array.from(new Uint8Array(hashBuffer))
+      .map((b) => b.toString(16).padStart(2, "0"))
+      .join("");
+  }
+
   let hash = 0;
   for (let i = 0; i < data.length; i++) {
     const char = data.charCodeAt(i);

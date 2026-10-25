@@ -24,6 +24,7 @@ export function createSession(
   customChallenges = null,
 ) {
   const sessionToken = `live_sess_${crypto.randomBytes(24).toString("hex")}`;
+  const sessionSecret = crypto.randomBytes(32).toString("hex");
   const pool = ["BLINK", "TURN_LEFT", "TURN_RIGHT"];
   const shuffled = [...pool];
   for (let i = shuffled.length - 1; i > 0; i--) {
@@ -59,6 +60,7 @@ export function createSession(
 
   const session = {
     sessionToken,
+    sessionSecret,
     adminId,
     apiKeyId,
     challenges,
@@ -71,6 +73,7 @@ export function createSession(
 
   return {
     sessionToken,
+    sessionSecret,
     challenges,
     expiresAt,
   };

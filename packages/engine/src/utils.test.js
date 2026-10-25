@@ -323,28 +323,28 @@ describe("Liveness Algorithms", () => {
   });
 
   describe("generateIntegrityHash", () => {
-    it("should produce a deterministic non-empty hash string", () => {
+    it("should produce a deterministic non-empty hash string", async () => {
       const descriptor = Array(128).fill(0.123);
       const sessionToken = "live_sess_test_token_123456";
       const timestamp = 1716336000000;
 
-      const hash1 = generateIntegrityHash(descriptor, sessionToken, timestamp);
-      const hash2 = generateIntegrityHash(descriptor, sessionToken, timestamp);
+      const hash1 = await generateIntegrityHash(descriptor, sessionToken, timestamp);
+      const hash2 = await generateIntegrityHash(descriptor, sessionToken, timestamp);
 
       expect(typeof hash1).toBe("string");
       expect(hash1.length).toBeGreaterThan(0);
       expect(hash1).toBe(hash2);
     });
 
-    it("should produce different hashes if descriptor or token changes", () => {
+    it("should produce different hashes if descriptor or token changes", async () => {
       const descriptorA = Array(128).fill(0.1);
       const descriptorB = Array(128).fill(0.2);
       const sessionToken = "live_sess_test_token_123456";
       const timestamp = 1716336000000;
 
-      const hashA = generateIntegrityHash(descriptorA, sessionToken, timestamp);
-      const hashB = generateIntegrityHash(descriptorB, sessionToken, timestamp);
-      const hashDiffToken = generateIntegrityHash(
+      const hashA = await generateIntegrityHash(descriptorA, sessionToken, timestamp);
+      const hashB = await generateIntegrityHash(descriptorB, sessionToken, timestamp);
+      const hashDiffToken = await generateIntegrityHash(
         descriptorA,
         "live_sess_different_token",
         timestamp,
@@ -352,6 +352,36 @@ describe("Liveness Algorithms", () => {
 
       expect(hashA).not.toBe(hashB);
       expect(hashA).not.toBe(hashDiffToken);
+    });
+
+    it("should produce cryptographic HMAC-SHA256 when sessionSecret is supplied", async () => {
+      const descriptor = Array(128).fill(0.123);
+      const sessionToken = "live_sess_test_token_123456";
+      const timestamp = 1716336000000;
+      const secret = "test_hmac_secret_key_12345";
+
+      const hmac1 = await generateIntegrityHash(
+        descriptor,
+        sessionToken,
+        timestamp,
+        secret,
+      );
+      const hmac2 = await generateIntegrityHash(
+        descriptor,
+        sessionToken,
+        timestamp,
+        secret,
+      );
+      const unkeyedHash = await generateIntegrityHash(
+        descriptor,
+        sessionToken,
+        timestamp,
+      );
+
+      expect(typeof hmac1).toBe("string");
+      expect(hmac1.length).toBe(64); // SHA-256 hex string length
+      expect(hmac1).toBe(hmac2);
+      expect(hmac1).not.toBe(unkeyedHash);
     });
   });
 });

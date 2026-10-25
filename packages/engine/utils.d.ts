@@ -20,3 +20,9 @@ export function calculateEuclideanDistance(
   vecB: number[],
 ): number;
 export function calculateFaceSize(landmarks: Landmark[]): number;
+export function generateIntegrityHash(
+  descriptor: number[],
+  sessionToken: string,
+  timestamp: number,
+  sessionSecret?: string | null,
+): Promise<string>;

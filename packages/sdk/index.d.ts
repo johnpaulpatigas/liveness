@@ -9,6 +9,7 @@ export interface LivenessConfig {
   minBrightness?: number;
   maxBrightness?: number;
   sessionToken?: string;
+  sessionSecret?: string;
   challenges?: string[];
   instructions?: {
     WAITING?: string;

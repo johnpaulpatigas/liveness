@@ -1,15 +1,10 @@
 import crypto from "crypto";
 import { consumeSession, getSession } from "../services/liveness.services.js";
 
-function generateLegacyHash(descriptor, sessionToken, timestamp) {
+function generateHmacSha256(descriptor, sessionToken, timestamp, secret) {
+  if (!secret) return null;
   const data = JSON.stringify(descriptor) + sessionToken + timestamp;
-  let hash = 0;
-  for (let i = 0; i < data.length; i++) {
-    const char = data.charCodeAt(i);
-    hash = (hash << 5) - hash + char;
-    hash |= 0;
-  }
-  return hash.toString(16);
+  return crypto.createHmac("sha256", secret).update(data).digest("hex");
 }
 
 function generateSha256Hash(descriptor, sessionToken, timestamp) {
@@ -144,20 +139,24 @@ export function validateIntegrity(req, res, next) {
     });
   }
 
+  const expectedHmac = serverSession?.sessionSecret
+    ? generateHmacSha256(
+        descriptor,
+        sessionToken,
+        timestamp,
+        serverSession.sessionSecret,
+      )
+    : null;
+
   const expectedSha256 = generateSha256Hash(
-    descriptor,
-    sessionToken,
-    timestamp,
-  );
-  const expectedLegacy = generateLegacyHash(
     descriptor,
     sessionToken,
     timestamp,
   );
 
   const isValidIntegrity =
-    safeCompare(integrity, expectedSha256) ||
-    safeCompare(integrity, expectedLegacy);
+    (expectedHmac && safeCompare(integrity, expectedHmac)) ||
+    safeCompare(integrity, expectedSha256);
 
   if (!isValidIntegrity) {
     return res.status(400).json({ error: "Payload integrity check failed" });

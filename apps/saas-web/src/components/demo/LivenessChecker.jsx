@@ -432,6 +432,7 @@ export function LivenessChecker() {
     setUiState(UI_STATE.CHECKING);
 
     let sessionToken = `sess_${Math.random().toString(36).substring(2, 15)}`;
+    let sessionSecret = null;
     let challengeList = selectedChallenges;
 
     if (apiConfigRef.current.enabled && apiConfigRef.current.apiKey) {
@@ -477,6 +478,7 @@ export function LivenessChecker() {
 
         const sessionData = await sessionRes.json();
         sessionToken = sessionData.sessionToken;
+        sessionSecret = sessionData.sessionSecret || null;
         challengeList = sessionData.challenges;
       } catch (err) {
         setUiState(UI_STATE.FAILURE);
@@ -504,6 +506,7 @@ export function LivenessChecker() {
 
     sdkRef.current.updateConfig({
       sessionToken,
+      sessionSecret,
       challenges: challengeList,
     });
 
