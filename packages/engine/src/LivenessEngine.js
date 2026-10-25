@@ -56,6 +56,8 @@ export class LivenessEngine {
   #nextChallengeTimeoutId = null;
   #turnThresholdCrossedTime = 0;
   #cropCanvas = null;
+  #consecutiveSlowFrames = 0;
+  #adaptiveFPSInterval = null;
 
   constructor(callbacks, config = {}) {
     if (
@@ -238,12 +240,25 @@ export class LivenessEngine {
 
     const now = Date.now();
     const elapsed = now - this.#lastFrameTime;
-    const fpsInterval = 1000 / this.#config.targetFPS;
+    const baseFpsInterval = 1000 / this.#config.targetFPS;
+    const fpsInterval = this.#adaptiveFPSInterval || baseFpsInterval;
 
     if (elapsed > fpsInterval) {
       this.#lastFrameTime = now - (elapsed % fpsInterval);
+      const frameStart = Date.now();
       try {
         await this.#faceMesh.send({ image: this.#videoElement });
+        const processingDuration = Date.now() - frameStart;
+        // If processing takes longer than the target interval for 5 consecutive frames,
+        // dynamically throttle to a safer 20 FPS to reduce thermal and battery strain.
+        if (processingDuration > fpsInterval) {
+          this.#consecutiveSlowFrames++;
+          if (this.#consecutiveSlowFrames >= 5 && !this.#adaptiveFPSInterval) {
+            this.#adaptiveFPSInterval = 50; // Throttle to 20 FPS
+          }
+        } else if (this.#consecutiveSlowFrames > 0) {
+          this.#consecutiveSlowFrames = 0;
+        }
       } catch (err) {
         // Suppress frame processing errors if engine was stopped during await
         if (this.#isStopped) return;
