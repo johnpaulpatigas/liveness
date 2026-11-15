@@ -217,26 +217,28 @@ export async function incrementOtpAttempts(otpId) {
   return result.rows[0]?.attempts || 0;
 }
 
-export async function markOtpUsed(otpId) {
-  await pool.query(
+export async function markOtpUsed(otpId, client = null) {
+  const db = client || pool;
+  await db.query(
     "UPDATE email_verification_otps SET used_at = NOW() WHERE id = $1",
     [otpId],
   );
 }
 
-export async function verifyAdminEmail(adminId) {
+export async function verifyAdminEmail(adminId, client = null) {
+  const db = client || pool;
   try {
-    await pool.query(
+    await db.query(
       "ALTER TABLE admins ADD COLUMN IF NOT EXISTS email_verified BOOLEAN NOT NULL DEFAULT FALSE;",
     );
-    await pool.query(
+    await db.query(
       "ALTER TABLE admins ADD COLUMN IF NOT EXISTS email_verified_at TIMESTAMP WITH TIME ZONE;",
     );
   } catch {
     // Ignore schema update errors if columns already exist or concurrent migration
   }
 
-  const result = await pool.query(
+  const result = await db.query(
     'UPDATE admins SET email_verified = TRUE, email_verified_at = NOW() WHERE id = $1 RETURNING id, username, first_name as "firstName", last_name as "lastName", email, email_verified as "emailVerified", email_verified_at as "emailVerifiedAt"',
     [adminId],
   );

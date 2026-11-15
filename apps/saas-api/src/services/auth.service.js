@@ -241,8 +241,10 @@ export async function verifyEmailOtp(adminId, otp) {
     throw error;
   }
 
-  await authRepositories.markOtpUsed(activeOtp.id);
-  const updatedAdmin = await authRepositories.verifyAdminEmail(adminId);
+  const updatedAdmin = await withTransaction(async (client) => {
+    await authRepositories.markOtpUsed(activeOtp.id, client);
+    return authRepositories.verifyAdminEmail(adminId, client);
+  });
 
   return {
     id: updatedAdmin.id,
