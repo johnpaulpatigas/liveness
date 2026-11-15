@@ -86,7 +86,7 @@ export const api = {
     },
     isInitialized: () => isInitialized,
     getCurrentUser: () => inMemoryUser,
-    signup: async (username, password, firstName, lastName, email) => {
+    signup: async (username, password, firstName, lastName, email, dateOfBirth) => {
       const result = await request("/dashboard/signup", {
         method: "POST",
         body: JSON.stringify({
@@ -95,6 +95,7 @@ export const api = {
           firstName,
           lastName,
           email,
+          dateOfBirth,
         }),
       });
       const { token: _token, ...admin } = result || {};

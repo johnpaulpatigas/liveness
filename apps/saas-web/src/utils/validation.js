@@ -67,6 +67,48 @@ export const emailRule = z
     message: "Email must not contain capital letters",
   });
 
+export const isAtLeast13YearsOld = (dateStr, refDate = new Date()) => {
+  if (!dateStr || typeof dateStr !== "string") return false;
+  const match = dateStr.match(/^(\d{4})-(\d{2})-(\d{2})$/);
+  if (!match) return false;
+  const y = parseInt(match[1], 10);
+  const m = parseInt(match[2], 10);
+  const d = parseInt(match[3], 10);
+
+  const birthDate = new Date(Date.UTC(y, m - 1, d));
+  if (
+    birthDate.getUTCFullYear() !== y ||
+    birthDate.getUTCMonth() !== m - 1 ||
+    birthDate.getUTCDate() !== d
+  ) {
+    return false;
+  }
+
+  const nowY = refDate.getFullYear();
+  const nowM = refDate.getMonth();
+  const nowD = refDate.getDate();
+
+  // Exactly 13 years ago today
+  const minEligibleBirthDate = new Date(Date.UTC(nowY - 13, nowM, nowD));
+  return birthDate <= minEligibleBirthDate;
+};
+
+export const getMaxBirthDateString = (refDate = new Date()) => {
+  const d = new Date(refDate.getFullYear() - 13, refDate.getMonth(), refDate.getDate());
+  const year = d.getFullYear();
+  const month = String(d.getMonth() + 1).padStart(2, "0");
+  const day = String(d.getDate()).padStart(2, "0");
+  return `${year}-${month}-${day}`;
+};
+
+export const dateOfBirthRule = z
+  .string()
+  .min(1, "Date of birth is required")
+  .refine(
+    (val) => isAtLeast13YearsOld(val),
+    "You must be at least 13 years old to register",
+  );
+
 export const signupSchema = z
   .object({
     username: usernameRule,
@@ -75,6 +117,7 @@ export const signupSchema = z
     firstName: nameRule,
     lastName: nameRule,
     email: emailRule,
+    dateOfBirth: dateOfBirthRule,
   })
   .refine((data) => data.password === data.confirmPassword, {
     message: "Passwords do not match",

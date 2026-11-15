@@ -144,6 +144,7 @@ async function ensureSchema() {
   try {
     await pool.query(`
       ALTER TABLE admins ADD COLUMN IF NOT EXISTS token_version INT NOT NULL DEFAULT 1;
+      ALTER TABLE admins ADD COLUMN IF NOT EXISTS date_of_birth DATE;
     `);
     console.log("Database schema migrations verified successfully.");
   } catch (err) {

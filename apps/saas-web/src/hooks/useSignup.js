@@ -11,6 +11,7 @@ export function useSignup({ modal = false } = {}) {
     firstName: "",
     lastName: "",
     email: "",
+    dateOfBirth: "",
   });
   const [error, setError] = useState("");
   const [fieldErrors, setFieldErrors] = useState({});
@@ -69,6 +70,7 @@ export function useSignup({ modal = false } = {}) {
         formData.firstName,
         formData.lastName,
         formData.email,
+        formData.dateOfBirth,
       );
       navigate("/dashboard", { replace: true });
     } catch (err) {

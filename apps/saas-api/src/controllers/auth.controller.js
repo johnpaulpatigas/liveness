@@ -13,6 +13,32 @@ const passwordComplexitySchema = z
   .regex(/[a-z]/, "Password must have at least 1 lower case.")
   .regex(/[0-9]/, "Password must have at least 1 number.");
 
+const isAtLeast13YearsOld = (dateStr) => {
+  if (!dateStr || typeof dateStr !== "string") return false;
+  const match = dateStr.match(/^(\d{4})-(\d{2})-(\d{2})$/);
+  if (!match) return false;
+  const y = parseInt(match[1], 10);
+  const m = parseInt(match[2], 10);
+  const d = parseInt(match[3], 10);
+
+  const birthDate = new Date(Date.UTC(y, m - 1, d));
+  if (
+    birthDate.getUTCFullYear() !== y ||
+    birthDate.getUTCMonth() !== m - 1 ||
+    birthDate.getUTCDate() !== d
+  ) {
+    return false;
+  }
+
+  const now = new Date();
+  const nowY = now.getFullYear();
+  const nowM = now.getMonth();
+  const nowD = now.getDate();
+
+  const minEligibleBirthDate = new Date(Date.UTC(nowY - 13, nowM, nowD));
+  return birthDate <= minEligibleBirthDate;
+};
+
 const signupSchema = z.object({
   username: z
     .string()
@@ -50,6 +76,13 @@ const signupSchema = z.object({
     .refine((val) => !/[A-Z]/.test(val), {
       message: "Email must not contain capital letters",
     }),
+  dateOfBirth: z
+    .string()
+    .min(1, "Date of birth is required")
+    .refine(
+      (val) => isAtLeast13YearsOld(val),
+      "You must be at least 13 years old to register",
+    ),
 });
 
 const loginSchema = z
@@ -108,7 +141,8 @@ export async function signup(req, res) {
     return res.status(400).json({ error: validation.error.issues[0].message });
   }
 
-  const { username, password, firstName, lastName, email } = validation.data;
+  const { username, password, firstName, lastName, email, dateOfBirth } =
+    validation.data;
 
   try {
     const result = await authServices.signup(
@@ -117,6 +151,7 @@ export async function signup(req, res) {
       firstName,
       lastName,
       email,
+      dateOfBirth,
     );
 
     const { token, ...admin } = result;

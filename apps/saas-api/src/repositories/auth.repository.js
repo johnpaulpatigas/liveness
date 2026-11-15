@@ -6,6 +6,7 @@ export async function createAdmin(
   firstName,
   lastName,
   email,
+  dateOfBirth = null,
 ) {
   try {
     await pool.query(
@@ -14,13 +15,16 @@ export async function createAdmin(
     await pool.query(
       "ALTER TABLE admins ADD COLUMN IF NOT EXISTS email_verified_at TIMESTAMP WITH TIME ZONE;",
     );
+    await pool.query(
+      "ALTER TABLE admins ADD COLUMN IF NOT EXISTS date_of_birth DATE;",
+    );
   } catch {
     // Ignore schema update errors if columns already exist or concurrent migration
   }
 
   const result = await pool.query(
-    'INSERT INTO admins (username, password_hash, first_name, last_name, email) VALUES ($1, $2, $3, $4, $5) RETURNING id, username, first_name as "firstName", last_name as "lastName", email, email_verified as "emailVerified", token_version as "tokenVersion", created_at',
-    [username, passwordHash, firstName, lastName, email],
+    'INSERT INTO admins (username, password_hash, first_name, last_name, email, date_of_birth) VALUES ($1, $2, $3, $4, $5, $6) RETURNING id, username, first_name as "firstName", last_name as "lastName", email, date_of_birth as "dateOfBirth", email_verified as "emailVerified", token_version as "tokenVersion", created_at',
+    [username, passwordHash, firstName, lastName, email, dateOfBirth],
   );
   return result.rows[0];
 }

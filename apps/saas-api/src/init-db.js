@@ -22,6 +22,7 @@ CREATE TABLE IF NOT EXISTS admins (
     first_name VARCHAR(255) NOT NULL,
     last_name VARCHAR(255) NOT NULL,
     email VARCHAR(255) NOT NULL UNIQUE,
+    date_of_birth DATE,
     email_verified BOOLEAN NOT NULL DEFAULT FALSE,
     email_verified_at TIMESTAMP WITH TIME ZONE,
     token_version INT NOT NULL DEFAULT 1,
@@ -32,6 +33,7 @@ CREATE TABLE IF NOT EXISTS admins (
 ALTER TABLE admins ADD COLUMN IF NOT EXISTS token_version INT NOT NULL DEFAULT 1;
 ALTER TABLE admins ADD COLUMN IF NOT EXISTS email_verified BOOLEAN NOT NULL DEFAULT FALSE;
 ALTER TABLE admins ADD COLUMN IF NOT EXISTS email_verified_at TIMESTAMP WITH TIME ZONE;
+ALTER TABLE admins ADD COLUMN IF NOT EXISTS date_of_birth DATE;
 
 -- Email verification OTPs table
 CREATE TABLE IF NOT EXISTS email_verification_otps (

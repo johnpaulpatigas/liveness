@@ -39,7 +39,44 @@ export async function sendOtpForAdmin(adminId, email) {
   return sendVerificationOtpEmail(email, otp);
 }
 
-export async function signup(username, password, firstName, lastName, email) {
+export function isAtLeast13YearsOld(dateStr, refDate = new Date()) {
+  if (!dateStr || typeof dateStr !== "string") return false;
+  const match = dateStr.match(/^(\d{4})-(\d{2})-(\d{2})$/);
+  if (!match) return false;
+  const y = parseInt(match[1], 10);
+  const m = parseInt(match[2], 10);
+  const d = parseInt(match[3], 10);
+
+  const birthDate = new Date(Date.UTC(y, m - 1, d));
+  if (
+    birthDate.getUTCFullYear() !== y ||
+    birthDate.getUTCMonth() !== m - 1 ||
+    birthDate.getUTCDate() !== d
+  ) {
+    return false;
+  }
+
+  const nowY = refDate.getFullYear();
+  const nowM = refDate.getMonth();
+  const nowD = refDate.getDate();
+
+  const minEligibleBirthDate = new Date(Date.UTC(nowY - 13, nowM, nowD));
+  return birthDate <= minEligibleBirthDate;
+}
+
+export async function signup(
+  username,
+  password,
+  firstName,
+  lastName,
+  email,
+  dateOfBirth,
+) {
+  if (dateOfBirth && !isAtLeast13YearsOld(dateOfBirth)) {
+    const error = new Error("You must be at least 13 years old to register");
+    error.status = 400;
+    throw error;
+  }
   if (
     typeof firstName === "string" &&
     (firstName.toLowerCase() === firstName || !/^[A-Z]/.test(firstName))
@@ -79,6 +116,7 @@ export async function signup(username, password, firstName, lastName, email) {
     firstName,
     lastName,
     email,
+    dateOfBirth,
   );
 
   // Automatically dispatch verification OTP on signup

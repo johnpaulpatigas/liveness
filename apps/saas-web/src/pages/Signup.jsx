@@ -1,5 +1,6 @@
 import {
   AlertCircle,
+  Calendar,
   Eye,
   EyeOff,
   Lock as LockIcon,
@@ -8,9 +9,11 @@ import {
   User,
   X,
 } from "lucide-react";
+import { useMemo } from "react";
 import { Link } from "react-router-dom";
 import { useSignup } from "../hooks/useSignup";
 import AuthLayout from "../layouts/AuthLayout";
+import { getMaxBirthDateString } from "../utils/validation";
 
 export default function Signup({ modal = false }) {
   const {
@@ -29,6 +32,8 @@ export default function Signup({ modal = false }) {
     hasFieldErrors,
     location,
   } = useSignup({ modal });
+
+  const maxBirthDate = useMemo(() => getMaxBirthDateString(), []);
 
   const formContent = (
     <div className="w-full">
@@ -240,6 +245,51 @@ export default function Signup({ modal = false }) {
               className="mt-1 ml-1 text-xs font-medium text-red-600"
             >
               {fieldErrors.email}
+            </p>
+          )}
+        </div>
+
+        <div>
+          <label
+            htmlFor="dateOfBirth"
+            className="mb-1 ml-0.5 block font-mono text-xs font-semibold tracking-wider text-slate-600 uppercase"
+          >
+            Date of Birth
+          </label>
+          <div className="relative">
+            <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3.5">
+              <Calendar
+                className={`h-4 w-4 ${
+                  fieldErrors.dateOfBirth ? "text-red-500" : "text-slate-400"
+                }`}
+              />
+            </div>
+            <input
+              id="dateOfBirth"
+              type="date"
+              required
+              max={maxBirthDate}
+              value={formData.dateOfBirth}
+              onChange={handleChange}
+              aria-invalid={Boolean(fieldErrors.dateOfBirth)}
+              aria-describedby={
+                fieldErrors.dateOfBirth ? "dateOfBirth-error" : undefined
+              }
+              className={`${getInputClass("dateOfBirth")} pl-9`}
+            />
+            {fieldErrors.dateOfBirth && (
+              <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">
+                <AlertCircle className="h-4 w-4 text-red-500" />
+              </div>
+            )}
+          </div>
+          {fieldErrors.dateOfBirth && (
+            <p
+              id="dateOfBirth-error"
+              role="alert"
+              className="mt-1 ml-1 text-xs font-medium text-red-600"
+            >
+              {fieldErrors.dateOfBirth}
             </p>
           )}
         </div>
