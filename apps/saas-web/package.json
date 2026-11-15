@@ -10,6 +10,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@liveness/api-client": "*",
     "@liveness/engine": "*",
     "@liveness/sdk": "*",
     "lucide-react": "^0.477.0",

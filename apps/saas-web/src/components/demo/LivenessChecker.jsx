@@ -3,6 +3,7 @@ import {
   calculateEuclideanDistance,
 } from "@liveness/engine/utils";
 import { LivenessSDK } from "@liveness/sdk";
+import { LivenessApiClient } from "@liveness/api-client";
 import { useEffect, useRef, useState } from "react";
 import { ApiSettings } from "./ApiSettings";
 import { ProgressBar } from "./ProgressBar";
@@ -220,43 +221,31 @@ export function LivenessChecker() {
             "https://api.liveness.cloud/api/liveness";
           const baseUrl = rawUrl.replace(/\/+$/, "");
 
-          let endpoint;
-          let body;
+          const client = new LivenessApiClient({
+            baseUrl,
+            apiKey,
+          });
 
+          let cloudResult;
           if (modeRef.current === MODE.ENROLL) {
-            endpoint = `${baseUrl}/enroll`;
-            body = { name: userNameRef.current || "User", ...livenessResult };
+            cloudResult = await client.liveness.enroll({
+              name: userNameRef.current || "User",
+              ...livenessResult,
+            });
           } else if (verifyTypeRef.current === VERIFY_TYPE.ONE_TO_ONE) {
-            endpoint = `${baseUrl}/verify-one`;
             const currentTargetId = (targetIdRef.current || "").trim();
             if (!currentTargetId) {
               throw new Error(
                 "Target ID (UUID) is required for 1:1 verification.",
               );
             }
-            body = { targetId: currentTargetId, ...livenessResult };
+            cloudResult = await client.liveness.verifyOne({
+              targetId: currentTargetId,
+              ...livenessResult,
+            });
           } else {
-            endpoint = `${baseUrl}/verify`;
-            body = livenessResult;
+            cloudResult = await client.liveness.verify(livenessResult);
           }
-
-          const response = await fetch(endpoint, {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-              "x-api-key": apiKey,
-            },
-            body: JSON.stringify(body),
-          });
-
-          if (!response.ok) {
-            const error = await response.json().catch(() => ({}));
-            throw new Error(
-              error.error || `Request failed with status ${response.status}`,
-            );
-          }
-
-          const cloudResult = await response.json();
 
           if (modeRef.current === MODE.ENROLL) {
             const newCloudUser = {
@@ -457,25 +446,14 @@ export function LivenessChecker() {
           ? ["WAITING", ...shuffledActive, "WAITING"]
           : shuffledActive;
 
-        const sessionRes = await fetch(`${baseUrl}/session`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            "x-api-key": apiKey,
-          },
-          body: JSON.stringify({
-            challenges: requestedChallenges,
-          }),
+        const client = new LivenessApiClient({
+          baseUrl,
+          apiKey,
         });
 
-        if (!sessionRes.ok) {
-          const errData = await sessionRes.json().catch(() => ({}));
-          throw new Error(
-            errData.error || `Session creation failed (${sessionRes.status})`,
-          );
-        }
-
-        const sessionData = await sessionRes.json();
+        const sessionData = await client.liveness.createSession({
+          challenges: requestedChallenges,
+        });
         sessionToken = sessionData.sessionToken;
         sessionSecret = sessionData.sessionSecret || null;
         challengeList = sessionData.challenges;
