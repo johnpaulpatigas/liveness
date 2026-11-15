@@ -51,7 +51,7 @@ export default function Signup({ modal = false }) {
               Create an Account
             </h2>
             <p className="text-xs font-medium text-slate-500">
-              Get started with your free 1,000 checks
+              Get started with your developer console
             </p>
           </div>
         </div>
