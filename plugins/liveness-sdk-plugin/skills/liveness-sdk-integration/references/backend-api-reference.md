@@ -1,10 +1,50 @@
 # Liveness Backend API Reference
 
-This document provides specifications for the Liveness Cloud REST API.
+This document provides specifications for the Liveness Cloud REST API and the `@liveness/api-client` package.
 
 ---
 
-## 1. Cloud REST API Specifications
+## 1. Backend SDK (@liveness/api-client)
+
+For Node.js, Bun, Deno, and serverless environments, install `@liveness/api-client`:
+
+```bash
+npm install @liveness/api-client
+```
+
+```javascript
+import { LivenessApiClient } from "@liveness/api-client";
+
+const client = new LivenessApiClient({
+  apiKey: "your_live_api_key_here",
+});
+
+// Initialize session
+const session = await client.liveness.createSession({
+  challenges: ["WAITING", "BLINK", "TURN_LEFT", "WAITING"],
+});
+
+// Verify 1:N probe
+const result = await client.liveness.verify({
+  descriptor,
+  sessionToken: session.sessionToken,
+  sessionSecret: session.sessionSecret,
+  challenges: session.challenges,
+});
+
+// Verify 1:1 probe
+const resultOne = await client.liveness.verifyOne({
+  targetId: "uuid-user-id",
+  descriptor,
+  sessionToken: session.sessionToken,
+  sessionSecret: session.sessionSecret,
+  challenges: session.challenges,
+});
+```
+
+---
+
+## 2. Cloud REST API Specifications
 
 Base URL: `https://api.liveness.cloud/api/liveness` (production) or `http://localhost:3000/api/liveness` (local dev)
 
@@ -139,7 +179,7 @@ Compares a fresh liveness vector directly against a specific `targetId` (User UU
 
 ---
 
-## 2. Self-Hosted Matching
+## 3. Self-Hosted Matching
 
 If you are running verification on your own server or client without the Cloud API, calculate Cosine Similarity and Euclidean Distance between the enrolled and probe descriptor vectors:
 

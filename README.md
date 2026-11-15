@@ -19,15 +19,26 @@ Repository layout:
 - `apps/saas-web`: SaaS platform, interactive demo (`/demo`), and documentation.
 - `apps/saas-api`: Verification and orchestration backend.
 - `packages/engine`: Core vision engine and mathematical utilities.
-- `packages/sdk`: Public SDK wrapper package.
+- `packages/sdk`: Browser client SDK (`@liveness/sdk`).
+- `packages/api-client`: Backend client SDK (`@liveness/api-client`).
 
 ## Installation
+
+### Frontend SDK (Browser)
 
 ```bash
 npm install @liveness/sdk
 ```
 
+### Backend SDK (Node.js / Server)
+
+```bash
+npm install @liveness/api-client
+```
+
 ## Quick start
+
+### 1. Browser client (@liveness/sdk)
 
 ```javascript
 import { LivenessSDK } from "@liveness/sdk";
@@ -44,6 +55,29 @@ sdk.on("success", (result) => {
 
 await sdk.load();
 await sdk.start(videoElement, canvasElement);
+```
+
+### 2. Backend server (@liveness/api-client)
+
+```javascript
+import { LivenessApiClient } from "@liveness/api-client";
+
+const client = new LivenessApiClient({
+  apiKey: process.env.LIVENESS_API_KEY,
+});
+
+// Create a verification session
+const session = await client.liveness.createSession();
+
+// Verify probe received from frontend
+const verification = await client.liveness.verify({
+  descriptor: probeDescriptor,
+  sessionToken: session.sessionToken,
+  sessionSecret: session.sessionSecret,
+  challenges: session.challenges,
+});
+
+console.log("Matched:", verification.verified, verification.match);
 ```
 
 ## Local development

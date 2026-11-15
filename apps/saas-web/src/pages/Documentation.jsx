@@ -604,7 +604,56 @@ const CloudUsageContent = () => (
 
       <div>
         <h3 className="mb-2 text-xl font-bold text-slate-900">
-          Cloud API endpoints
+          Backend SDK (@liveness/api-client)
+        </h3>
+        <p className="mb-4 text-sm text-slate-600">
+          Use the client SDK to call the SaaS API from Node.js, Bun, Deno, or
+          serverless routes. It manages session tokens, formats biometric
+          payloads, calculates HMAC-SHA256 signatures, and calls verification
+          and admin endpoints.
+        </p>
+        <div className="mb-4">
+          <CodeBlock language="bash" code="npm install @liveness/api-client" />
+        </div>
+        <CodeBlock
+          language="typescript"
+          title="backend-verification.ts"
+          code={`import { LivenessApiClient } from "@liveness/api-client";
+
+const client = new LivenessApiClient({
+  apiKey: process.env.LIVENESS_API_KEY,
+  // baseUrl: "https://api.liveness.cloud/api", // defaults to production
+});
+
+// 1. Create a server-orchestrated verification session
+export async function createLivenessSession() {
+  const session = await client.liveness.createSession({
+    challenges: ["WAITING", "BLINK", "TURN_LEFT", "WAITING"],
+  });
+  return session; // Send sessionToken and challenges to the browser SDK
+}
+
+// 2. Verify identity probe from frontend (1:N or 1:1)
+export async function verifyUserProbe(probePayload) {
+  const verification = await client.liveness.verify({
+    descriptor: probePayload.descriptor,
+    sessionToken: probePayload.sessionToken,
+    sessionSecret: probePayload.sessionSecret, // Computes HMAC integrity
+    challenges: probePayload.challenges,
+    metric: "both", // "cosine" | "euclidean" | "both"
+  });
+
+  if (verification.verified) {
+    console.log("Matched user:", verification.match.name);
+  }
+  return verification;
+}`}
+        />
+      </div>
+
+      <div>
+        <h3 className="mb-2 text-xl font-bold text-slate-900">
+          Cloud API endpoints (REST)
         </h3>
         <p className="mb-6 text-sm text-slate-600">
           The production API is hosted at{" "}
@@ -1830,47 +1879,47 @@ const Documentation = () => {
               aria-label="Documentation topics menu"
               className="animate-in fade-in zoom-in-95 absolute top-full right-0 left-0 z-40 mt-2 rounded-[10px] border border-slate-200/90 bg-white p-2.5 shadow-lg duration-150"
             >
-            {menu.map((group, idx) => (
-              <div key={idx} className="mb-3 last:mb-0">
-                <div className="mb-2 px-3 font-mono text-[11px] font-bold tracking-wider text-slate-500 uppercase">
-                  {group.title}
+              {menu.map((group, idx) => (
+                <div key={idx} className="mb-3 last:mb-0">
+                  <div className="mb-2 px-3 font-mono text-[11px] font-bold tracking-wider text-slate-500 uppercase">
+                    {group.title}
+                  </div>
+                  <div className="space-y-1">
+                    {group.items.map((item) => {
+                      const isActive = activePage === item.id;
+                      const ItemIcon = item.icon;
+                      return (
+                        <button
+                          key={item.id}
+                          onClick={() => {
+                            handleTopicChange(item.id);
+                            setTopicDropdownOpen(false);
+                          }}
+                          className={`group flex w-full cursor-pointer items-center rounded-md px-3.5 py-2 text-left text-xs font-medium transition-all duration-150 sm:text-sm ${
+                            isActive
+                              ? "bg-[#2f5bf5]/10 font-semibold text-[#2f5bf5]"
+                              : "text-slate-600 hover:bg-slate-50 hover:text-slate-900"
+                          }`}
+                        >
+                          {ItemIcon && (
+                            <ItemIcon
+                              className={`mr-3 h-4.5 w-4.5 shrink-0 ${
+                                isActive
+                                  ? "text-[#2f5bf5]"
+                                  : "text-slate-400 group-hover:text-slate-600"
+                              }`}
+                            />
+                          )}
+                          <span>{item.label}</span>
+                        </button>
+                      );
+                    })}
+                  </div>
                 </div>
-                <div className="space-y-1">
-                  {group.items.map((item) => {
-                    const isActive = activePage === item.id;
-                    const ItemIcon = item.icon;
-                    return (
-                      <button
-                        key={item.id}
-                        onClick={() => {
-                          handleTopicChange(item.id);
-                          setTopicDropdownOpen(false);
-                        }}
-                        className={`group flex w-full cursor-pointer items-center rounded-md px-3.5 py-2 text-left text-xs font-medium transition-all duration-150 sm:text-sm ${
-                          isActive
-                            ? "bg-[#2f5bf5]/10 font-semibold text-[#2f5bf5]"
-                            : "text-slate-600 hover:bg-slate-50 hover:text-slate-900"
-                        }`}
-                      >
-                        {ItemIcon && (
-                          <ItemIcon
-                            className={`mr-3 h-4.5 w-4.5 shrink-0 ${
-                              isActive
-                                ? "text-[#2f5bf5]"
-                                : "text-slate-400 group-hover:text-slate-600"
-                            }`}
-                          />
-                        )}
-                        <span>{item.label}</span>
-                      </button>
-                    );
-                  })}
-                </div>
-              </div>
-            ))}
-          </div>
-        </>
-      )}
+              ))}
+            </div>
+          </>
+        )}
       </div>
 
       {/* Desktop Sub-navigation Sidebar */}

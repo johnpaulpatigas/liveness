@@ -1,0 +1,31 @@
+{
+  "name": "@liveness/api-client",
+  "version": "1.0.0",
+  "description": "Official JavaScript client SDK for Liveness Cloud SaaS API.",
+  "author": "John Paul Patigas <johnpaulpatigas@gmail.com>",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/johnpaulpatigas/liveness.git"
+  },
+  "type": "module",
+  "main": "./src/index.js",
+  "types": "./index.d.ts",
+  "files": [
+    "src",
+    "index.d.ts",
+    "README.md"
+  ],
+  "exports": {
+    ".": {
+      "types": "./index.d.ts",
+      "default": "./src/index.js"
+    }
+  },
+  "scripts": {
+    "test": "vitest run"
+  },
+  "devDependencies": {
+    "vitest": "^4.0.16"
+  }
+}

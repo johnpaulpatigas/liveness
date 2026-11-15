@@ -20,7 +20,7 @@
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "typecheck": "tsc --noEmit",
-    "test": "npm run test -w packages/engine",
+    "test": "npm run test -w packages/engine && npm run test -w packages/api-client",
     "setup:agents": "node scripts/setup-agent-skills.js",
     "postinstall": "node scripts/patch-mediapipe.js && node scripts/install-win-rollup.js",
     "install:win-rollup": "node scripts/install-win-rollup.js"
