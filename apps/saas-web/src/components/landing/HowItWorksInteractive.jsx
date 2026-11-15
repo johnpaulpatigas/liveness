@@ -39,17 +39,14 @@ await sdk.start(videoElement, canvasElement);`,
       "Send the descriptor payload to your backend to compare against enrolled users.",
     fileName: "api/verify.js",
     code: `// Express / Node.js Backend Handler
-app.post('/api/verify', async (req, res) => {
-  const response = await fetch('https://api.liveness.cloud/api/liveness/verify', {
-    method: 'POST',
-    headers: {
-      'x-api-key': process.env.LIVENESS_API_KEY,
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(req.body),
-  });
+import { LivenessApiClient } from '@liveness/api-client';
 
-  const result = await response.json();
+const client = new LivenessApiClient({
+  apiKey: process.env.LIVENESS_API_KEY,
+});
+
+app.post('/api/verify', async (req, res) => {
+  const result = await client.liveness.verify(req.body);
   res.json(result);
 });`,
     statusMessage: "HTTP 200 OK: Match confirmed (similarity: 0.98)",
