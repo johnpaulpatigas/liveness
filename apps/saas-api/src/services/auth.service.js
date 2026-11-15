@@ -317,16 +317,22 @@ export async function resetPassword(token, newPassword) {
     throw error;
   }
 
-  // Atomically claim the token to prevent concurrent TOCTOU replay race conditions
-  const claimed = await authRepositories.markTokenUsed(resetToken.id);
-  if (!claimed) {
-    const error = new Error("Invalid or expired reset token");
-    error.status = 400;
-    throw error;
-  }
-
   const passwordHash = await bcrypt.hash(newPassword, 10);
-  await authRepositories.updateAdminPassword(resetToken.admin_id, passwordHash);
+
+  // Atomically claim the token and update the password within a transaction (commit & rollback)
+  await withTransaction(async (client) => {
+    const claimed = await authRepositories.markTokenUsed(resetToken.id, client);
+    if (!claimed) {
+      const error = new Error("Invalid or expired reset token");
+      error.status = 400;
+      throw error;
+    }
+    await authRepositories.updateAdminPassword(
+      resetToken.admin_id,
+      passwordHash,
+      client,
+    );
+  });
 }
 
 export async function changePassword(adminId, currentPassword, newPassword) {

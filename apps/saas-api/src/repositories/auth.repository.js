@@ -69,8 +69,9 @@ export async function findValidResetToken(tokenHash) {
   return result.rows[0];
 }
 
-export async function markTokenUsed(tokenId) {
-  const result = await pool.query(
+export async function markTokenUsed(tokenId, client = null) {
+  const db = client || pool;
+  const result = await db.query(
     "UPDATE password_reset_tokens SET used_at = NOW() WHERE id = $1 AND used_at IS NULL RETURNING id",
     [tokenId],
   );
@@ -85,8 +86,9 @@ export async function updateAdminProfile(adminId, firstName, lastName) {
   return result.rows[0];
 }
 
-export async function updateAdminPassword(adminId, passwordHash) {
-  await pool.query(
+export async function updateAdminPassword(adminId, passwordHash, client = null) {
+  const db = client || pool;
+  await db.query(
     "UPDATE admins SET password_hash = $1, token_version = token_version + 1 WHERE id = $2",
     [passwordHash, adminId],
   );
