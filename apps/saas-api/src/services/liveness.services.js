@@ -1,5 +1,6 @@
 import crypto from "crypto";
 import * as livenessRepository from "../repositories/liveness.repository.js";
+import { withTransaction } from "../db.js";
 
 const activeSessions = new Map();
 const SESSION_TTL_MS = 5 * 60 * 1000; // 5 minutes
@@ -93,23 +94,27 @@ export function consumeSession(sessionToken) {
 }
 
 export async function enrollUser(adminId, name, descriptor, apiKeyId = null) {
-  const enrolledUser = await livenessRepository.addUser(
-    adminId,
-    name,
-    descriptor,
-    apiKeyId,
-  );
+  return withTransaction(async (client) => {
+    const enrolledUser = await livenessRepository.addUser(
+      adminId,
+      name,
+      descriptor,
+      apiKeyId,
+      client,
+    );
 
-  await livenessRepository.addVerificationLog(
-    adminId,
-    enrolledUser.id,
-    enrolledUser.name,
-    1.0,
-    "ENROLLED",
-    apiKeyId,
-  );
+    await livenessRepository.addVerificationLog(
+      adminId,
+      enrolledUser.id,
+      enrolledUser.name,
+      1.0,
+      "ENROLLED",
+      apiKeyId,
+      client,
+    );
 
-  return enrolledUser;
+    return enrolledUser;
+  });
 }
 
 export const COSINE_SIMILARITY_THRESHOLD = 0.95;
