@@ -32,4 +32,28 @@ const pool = new Pool({
 
 export const query = (text, params) => pool.query(text, params);
 
+/**
+ * Execute a callback within an atomic PostgreSQL transaction (BEGIN ... COMMIT / ROLLBACK)
+ * @param {Function} callback - Function receiving (client) and returning a promise
+ * @returns {Promise<any>} Result returned by the callback
+ */
+export const withTransaction = async (callback) => {
+  const client = await pool.connect();
+  try {
+    await client.query("BEGIN");
+    const result = await callback(client);
+    await client.query("COMMIT");
+    return result;
+  } catch (error) {
+    try {
+      await client.query("ROLLBACK");
+    } catch (rollbackError) {
+      console.error("Failed to rollback transaction:", rollbackError);
+    }
+    throw error;
+  } finally {
+    client.release();
+  }
+};
+
 export default pool;

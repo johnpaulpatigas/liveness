@@ -7,22 +7,24 @@ export async function createAdmin(
   lastName,
   email,
   dateOfBirth = null,
+  client = null,
 ) {
+  const db = client || pool;
   try {
-    await pool.query(
+    await db.query(
       "ALTER TABLE admins ADD COLUMN IF NOT EXISTS email_verified BOOLEAN NOT NULL DEFAULT FALSE;",
     );
-    await pool.query(
+    await db.query(
       "ALTER TABLE admins ADD COLUMN IF NOT EXISTS email_verified_at TIMESTAMP WITH TIME ZONE;",
     );
-    await pool.query(
+    await db.query(
       "ALTER TABLE admins ADD COLUMN IF NOT EXISTS date_of_birth DATE;",
     );
   } catch {
     // Ignore schema update errors if columns already exist or concurrent migration
   }
 
-  const result = await pool.query(
+  const result = await db.query(
     'INSERT INTO admins (username, password_hash, first_name, last_name, email, date_of_birth) VALUES ($1, $2, $3, $4, $5, $6) RETURNING id, username, first_name as "firstName", last_name as "lastName", email, date_of_birth as "dateOfBirth", email_verified as "emailVerified", token_version as "tokenVersion", created_at',
     [username, passwordHash, firstName, lastName, email, dateOfBirth],
   );
@@ -165,10 +167,11 @@ export async function incrementTokenVersion(adminId) {
   }
 }
 
-export async function createOtp(adminId, otpHash, expiresAt) {
+export async function createOtp(adminId, otpHash, expiresAt, client = null) {
+  const db = client || pool;
   // Ensure table exists defensively
   try {
-    await pool.query(
+    await db.query(
       `CREATE TABLE IF NOT EXISTS email_verification_otps (
         id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
         admin_id UUID REFERENCES admins(id) ON DELETE CASCADE,
@@ -183,7 +186,7 @@ export async function createOtp(adminId, otpHash, expiresAt) {
     // Ignore schema update errors if table already exists or concurrent migration
   }
 
-  const result = await pool.query(
+  const result = await db.query(
     "INSERT INTO email_verification_otps (admin_id, otp_hash, expires_at) VALUES ($1, $2, $3) RETURNING id, admin_id, expires_at, created_at",
     [adminId, otpHash, expiresAt],
   );

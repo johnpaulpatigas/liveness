@@ -1,6 +1,7 @@
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import * as authRepositories from "../repositories/auth.repository.js";
+import { withTransaction } from "../db.js";
 import crypto from "crypto";
 import {
   sendResetPasswordEmail,
@@ -29,14 +30,14 @@ function generateSecureOtp() {
   return crypto.randomInt(100000, 1000000).toString();
 }
 
-export async function sendOtpForAdmin(adminId, email) {
+export async function sendOtpForAdmin(adminId, email, client = null) {
   const otp = generateSecureOtp();
   const otpHash = crypto.createHash("sha256").update(otp).digest("hex");
   const expiresAt = new Date(Date.now() + 10 * 60 * 1000); // 10 minutes
 
-  await authRepositories.createOtp(adminId, otpHash, expiresAt);
+  await authRepositories.createOtp(adminId, otpHash, expiresAt, client);
 
-  return sendVerificationOtpEmail(email, otp);
+  return { email, otp };
 }
 
 export function isAtLeast13YearsOld(dateStr, refDate = new Date()) {
@@ -110,17 +111,31 @@ export async function signup(
   const saltRounds = 10;
   const passwordHash = await bcrypt.hash(password, saltRounds);
 
-  const admin = await authRepositories.createAdmin(
-    username,
-    passwordHash,
-    firstName,
-    lastName,
-    email,
-    dateOfBirth,
-  );
+  // Execute admin creation and initial OTP generation inside an atomic transaction (commit & rollback)
+  const { admin, otp } = await withTransaction(async (client) => {
+    const createdAdmin = await authRepositories.createAdmin(
+      username,
+      passwordHash,
+      firstName,
+      lastName,
+      email,
+      dateOfBirth,
+      client,
+    );
 
-  // Automatically dispatch verification OTP on signup
-  await sendOtpForAdmin(admin.id, admin.email);
+    const { otp: generatedOtp } = await sendOtpForAdmin(
+      createdAdmin.id,
+      createdAdmin.email,
+      client,
+    );
+
+    return { admin: createdAdmin, otp: generatedOtp };
+  });
+
+  // Dispatch verification email once transaction has committed successfully
+  sendVerificationOtpEmail(admin.email, otp).catch((emailErr) => {
+    console.error("Failed to send signup verification email:", emailErr);
+  });
 
   const token = jwt.sign(
     {
@@ -253,7 +268,8 @@ export async function resendVerificationOtp(adminId) {
     throw error;
   }
 
-  const dispatchResult = await sendOtpForAdmin(admin.id, admin.email);
+  const { otp } = await sendOtpForAdmin(admin.id, admin.email);
+  const dispatchResult = await sendVerificationOtpEmail(admin.email, otp);
   if (dispatchResult && dispatchResult.success === false) {
     const error = new Error(
       dispatchResult.error || "Failed to deliver verification email. Please check your email address.",
