@@ -143,10 +143,26 @@ Never send raw video feeds or images to the server. Transmit only the 128-dimens
 
 ### Option A: Liveness Cloud API
 
-1. Request a verification session with `POST /api/liveness/session` using the `x-api-key` header to receive a `sessionToken` and randomized `challenges`.
-2. Pass the `sessionToken` and `challenges` to `sdk.updateConfig()`.
-3. Submit the resulting biometric vector to `POST /api/liveness/verify` (1:N identification) or `POST /api/liveness/verify-one` (1:1 with `targetId`).
-4. Call `sdk.destroy()` when the verification lifecycle completes to free memory.
+Use the `@liveness/api-client` package (or direct HTTP calls):
+
+```javascript
+import { LivenessApiClient } from "@liveness/api-client";
+
+const client = new LivenessApiClient({ apiKey: process.env.LIVENESS_API_KEY });
+
+// 1. Request verification session
+const session = await client.liveness.createSession();
+
+// 2. Pass session.sessionToken & session.challenges to frontend sdk.updateConfig()
+
+// 3. Verify probe submitted from frontend
+const verification = await client.liveness.verify({
+  descriptor: probeResult.descriptor,
+  sessionToken: probeResult.sessionToken,
+  sessionSecret: session.sessionSecret,
+  challenges: probeResult.challenges,
+});
+```
 
 ### Option B: Self-Hosted Matching (Cosine Similarity & Euclidean Distance)
 

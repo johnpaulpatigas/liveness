@@ -16,7 +16,7 @@ npm install @liveness/api-client
 
 ## Quickstart
 
-### 1. Initialize Client
+### 1. Initialize client
 
 ```javascript
 import { LivenessApiClient } from "@liveness/api-client";
@@ -27,9 +27,9 @@ const client = new LivenessApiClient({
 });
 ```
 
-### 2. Create a Verification Session
+### 2. Create a verification session
 
-Before running liveness challenges on the front-end, initiate a server-orchestrated verification session:
+Before running challenges in the browser, create a verification session on your server:
 
 ```javascript
 const session = await client.liveness.createSession({
@@ -45,23 +45,23 @@ console.log(session);
 // }
 ```
 
-### 3. Enroll a User Face
+### 3. Enroll a user face
 
 ```javascript
 const user = await client.liveness.enroll({
   name: "Jane Doe",
   descriptor: faceDescriptor128, // Array of 128 numbers
   sessionToken: session.sessionToken,
-  sessionSecret: session.sessionSecret, // Auto-computes HMAC integrity
+  sessionSecret: session.sessionSecret, // Computes HMAC integrity
   challenges: session.challenges,
 });
 
 console.log("Enrolled ID:", user.id);
 ```
 
-### 4. Verify Identity (1:1 or 1:N)
+### 4. Verify identity (1:1 or 1:N)
 
-**1:N Verification (identify unknown person among enrolled identities):**
+**1:N verification (match against all enrolled identities):**
 
 ```javascript
 const result = await client.liveness.verify({
@@ -79,7 +79,7 @@ if (result.verified) {
 }
 ```
 
-**1:1 Verification (verify against a known enrolled UUID):**
+**1:1 verification (match against a specific user UUID):**
 
 ```javascript
 const result = await client.liveness.verifyOne({
@@ -93,7 +93,7 @@ const result = await client.liveness.verifyOne({
 
 ---
 
-## Dashboard & Admin Endpoints
+## Dashboard and admin endpoints
 
 When authenticating as an admin using a JWT Bearer token:
 

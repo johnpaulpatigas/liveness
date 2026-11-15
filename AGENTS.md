@@ -10,8 +10,8 @@ When implementing or modifying features involving @liveness/sdk and biometric fa
   - autoPlay (or autoplay)
   - playsInline (or playsinline)
   - muted
-- Resolution and Facing Mode: Request facingMode: "user". Use ideal dimensions 720x1280 for mobile portrait orientations and 1280x720 for landscape or desktop screens.
-- Cleanup: When a component unmounts or a verification session finishes, call sdk.stop() or sdk.destroy() to release camera tracks and clean up WebGL tensors.
+- Resolution and Facing Mode: Request facingMode: "user" with ideal dimensions 1280x720.
+- Cleanup: When a component unmounts or a verification session finishes, ALWAYS call sdk.stop(videoElement) and ensure all tracks on videoElement.srcObject are stopped (track.stop()) to release camera hardware.
 
 ---
 

@@ -1,10 +1,10 @@
-# Liveness SDK Skills Plugin (liveness-sdk-plugin)
+# Liveness SDK skills plugin
 
-An agent skills plugin for Antigravity / Gemini CLI and AI coding assistants. This plugin equips AI agents with the knowledge, procedural workflows, code templates, and validation rules required to implement, integrate, and verify the Liveness SDK (@liveness/sdk) and Biometric Face Verification in web applications.
+Skills plugin for Antigravity, Claude Code, Cursor, and Windsurf. It provides rules, API references, and code examples for integrating `@liveness/sdk`.
 
 ---
 
-## What is Included
+## Contents
 
 ```text
 liveness-sdk-plugin/
@@ -32,9 +32,9 @@ liveness-sdk-plugin/
 
 ---
 
-## Installation and Usage
+## Installation and usage
 
-### Method 1: Workspace Installation (Project-Specific)
+### Workspace installation
 
 Place the plugin in your project's `.agents/plugins/` directory:
 
@@ -43,9 +43,9 @@ mkdir -p .agents/plugins
 cp -r /path/to/liveness-sdk-plugin .agents/plugins/
 ```
 
-Antigravity automatically discovers and activates all skills and rules in `.agents/`.
+Antigravity automatically discovers and activates skills and rules in `.agents/`.
 
-### Method 2: Global Installation (All Projects on Machine)
+### Global installation
 
 Install the plugin into your global configuration:
 
@@ -54,16 +54,16 @@ mkdir -p ~/.gemini/config/plugins/
 cp -r /path/to/liveness-sdk-plugin ~/.gemini/config/plugins/
 ```
 
-### Method 3: Using in Other AI Assistants (Claude Code, Cursor, Windsurf)
+### Other AI assistants
 
-- Cursor / Windsurf: Add `rules/AGENTS.md` to `.cursorrules` or `.windsurfrules`.
+- Cursor and Windsurf: Add `rules/AGENTS.md` to `.cursorrules` or `.windsurfrules`.
 - Claude Code: Add `rules/AGENTS.md` to `CLAUDE.md`.
 
 ---
 
-## Included Assets Helper Script
+## Copying model assets
 
-To automatically copy the required MediaPipe Face Mesh and ResNet-34 FaceRecognitionNet model assets to your web app's `public/` directory:
+Copy the MediaPipe Face Mesh and ResNet-34 model assets to your public directory:
 
 ```bash
 node .agents/plugins/liveness-sdk-plugin/skills/liveness-sdk-integration/scripts/copy-liveness-assets.js ./public
@@ -71,13 +71,13 @@ node .agents/plugins/liveness-sdk-plugin/skills/liveness-sdk-integration/scripts
 
 ---
 
-## How AI Agents Use This Skill
+## How agents use this skill
 
-When a user prompts the AI agent with requests such as:
+When a user prompts the AI assistant with requests such as:
 
 - "Add liveness detection to our React login form"
 - "Integrate @liveness/sdk into our Next.js onboarding"
 - "How do I verify the biometric descriptor on the backend?"
 - "Help me fix a camera permission or poor lighting issue with the liveness SDK"
 
-The agent automatically activates the `liveness-sdk-integration` skill, loads the relevant API references and code examples via progressive disclosure, and generates robust integration code matching the actual Liveness SDK implementation.
+The agent activates the `liveness-sdk-integration` skill, loads the relevant references and examples, and produces integration code matching the SDK API.

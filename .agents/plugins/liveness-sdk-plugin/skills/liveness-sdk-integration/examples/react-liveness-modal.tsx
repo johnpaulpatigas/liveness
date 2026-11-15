@@ -34,6 +34,8 @@ export function LivenessModal({
     },
     onSuccess: async (result) => {
       try {
+        // Security Notice: For production, route verification through your own backend proxy
+        // to prevent exposing your secret x-api-key in client-side code.
         const response = await fetch(apiEndpoint, {
           method: "POST",
           headers: {

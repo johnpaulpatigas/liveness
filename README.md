@@ -103,7 +103,7 @@ console.log("Matched:", verification.verified, verification.match);
 
 Start services from the root directory:
 
-- Web platform & demo: `npm run dev` (or `npm run dev:saas`)
+- Web platform and demo: `npm run dev` (or `npm run dev:saas`)
 - SaaS API: `npm run dev:api`
 
 ## Testing and building

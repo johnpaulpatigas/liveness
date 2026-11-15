@@ -1,14 +1,56 @@
 # Liveness Backend API Reference
 
-This document provides specifications for the Liveness Cloud REST API.
+This document provides specifications for the Liveness Cloud REST API and the `@liveness/api-client` package.
 
 ---
 
-## 1. Cloud REST API Specifications
+## 1. Backend SDK (@liveness/api-client)
+
+For Node.js, Bun, Deno, and serverless environments, install `@liveness/api-client`:
+
+```bash
+npm install @liveness/api-client
+```
+
+```javascript
+import { LivenessApiClient } from "@liveness/api-client";
+
+const client = new LivenessApiClient({
+  apiKey: "your_live_api_key_here",
+});
+
+// Initialize session
+const session = await client.liveness.createSession({
+  challenges: ["WAITING", "BLINK", "TURN_LEFT", "WAITING"],
+});
+
+// Verify 1:N probe
+const result = await client.liveness.verify({
+  descriptor,
+  sessionToken: session.sessionToken,
+  sessionSecret: session.sessionSecret,
+  challenges: session.challenges,
+});
+
+// Verify 1:1 probe
+const resultOne = await client.liveness.verifyOne({
+  targetId: "uuid-user-id",
+  descriptor,
+  sessionToken: session.sessionToken,
+  sessionSecret: session.sessionSecret,
+  challenges: session.challenges,
+});
+```
+
+---
+
+## 2. Cloud REST API Specifications
 
 Base URL: `https://api.liveness.cloud/api/liveness` (production) or `http://localhost:3000/api/liveness` (local dev)
 
 All requests require the `x-api-key` header with a valid API key.
+
+> **Security Architecture Notice:** Keep your `x-api-key` strictly on your backend server. Never expose it in client-side applications. Frontends should obtain an ephemeral session from your backend via `POST /session` and proxy biometric submissions.
 
 ```http
 x-api-key: your_live_api_key_here
@@ -17,7 +59,31 @@ Content-Type: application/json
 
 ---
 
-### A. Enroll Biometric Identity (POST /enroll)
+### A. Initialize Verification Session (POST /session)
+
+Initializes a server-orchestrated verification session with authoritative challenge sequencing and replay protection.
+
+#### Request Body (Optional)
+
+```json
+{
+  "challenges": ["WAITING", "BLINK", "TURN_LEFT", "WAITING"]
+}
+```
+
+#### Response (201 Created)
+
+```json
+{
+  "sessionToken": "live_sess_7f8a9b0c1d2e3f4a...",
+  "challenges": ["WAITING", "BLINK", "TURN_LEFT", "WAITING"],
+  "expiresAt": 1716336300000
+}
+```
+
+---
+
+### B. Enroll Biometric Identity (POST /enroll)
 
 Enrolls a user's 128-dimensional face descriptor as an enrolled identity.
 
@@ -113,7 +179,7 @@ Compares a fresh liveness vector directly against a specific `targetId` (User UU
 
 ---
 
-## 2. Self-Hosted Matching
+## 3. Self-Hosted Matching
 
 If you are running verification on your own server or client without the Cloud API, calculate Cosine Similarity and Euclidean Distance between the enrolled and probe descriptor vectors:
 
